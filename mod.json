@@ -1,0 +1,35 @@
+{
+	"geode": "4.3.1",
+	"gd": {
+		"win": "2.2074",
+		"android": "2.2074",
+		"mac": "2.2074",
+		"ios": "2.2074"
+	},
+	"id": "silverstar.legacy-particles",
+	"name": "True Legacy Particles",
+	"version": "v1.0.0",
+	"developer": "SILVERSTAR",
+	"description": "old player particles",
+	"repository": "https://github.com/silver984/True-Legacy-Particles",
+	"settings": {
+		"legacy-tracking": {
+			"name": "Legacy Tracking",
+			"type": "bool",
+			"description": "Restores how ground particles followed the player.",
+			"default": true
+		},
+		"legacy-scaling": {
+			"name": "Legacy Scaling",
+			"type": "bool",
+			"description": "Restores how particles followed the player when mini mode was first introduced.",
+			"default": false
+		},
+		"inconst-values": {
+			"name": "Inconsistent Values",
+			"type": "bool",
+			"description": "Restores how particles change after entering certain portals.",
+			"default": true
+		}
+	}
+}
