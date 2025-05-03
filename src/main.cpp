@@ -91,6 +91,7 @@ class $modify(GJBaseGameLayer) {
 		d.legacyTracking = Mod::get()->getSettingValue<bool>("legacy-tracking");
 		d.legacyScaling = Mod::get()->getSettingValue<bool>("legacy-scaling");
 		d.inconstVal = Mod::get()->getSettingValue<bool>("inconst-values");
+
 		PlayerObject* player[2]{
 			m_player1,
 			m_player2
@@ -118,7 +119,7 @@ class $modify(GJBaseGameLayer) {
 
 		for (int i = 0; i < 2; i++) {
 			p[i].framesBeforeSpiderDashed++;
-			player[i]->m_dashParticles->setPosition(player[i]->getPosition());
+			// player[i]->m_dashParticles->setPosition(player[i]->m_obPosition); TO-DO! for some reason this actually doesnt center the dash particles
 			player[i]->m_landParticles0->setRotation(0);
 			player[i]->m_landParticles1->setRotation(0);
 		}

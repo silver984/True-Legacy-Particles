@@ -8,10 +8,15 @@
 	},
 	"id": "silverstar.legacy-particles",
 	"name": "True Legacy Particles",
-	"version": "v1.0.0",
+	"version": "v1.0.1",
 	"developer": "SILVERSTAR",
 	"description": "old player particles",
 	"repository": "https://github.com/silver984/True-Legacy-Particles",
+	"tags": [
+		"offline",
+		"customization",
+		"gameplay"
+	],
 	"settings": {
 		"legacy-tracking": {
 			"name": "Legacy Tracking",
