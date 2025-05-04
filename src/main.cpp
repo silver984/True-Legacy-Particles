@@ -78,6 +78,14 @@ class $modify(PlayerObject) {
 	}
 };
 
+template <typename T>
+T getSettingValue(std::string_view name) {
+	static T value = (listenForSettingChangesV3<T>(name, [](T val) {
+		value = val;
+	}), Mod::get()->getSettingValue<T>(name));
+	return value;
+}
+
 class $modify(GJBaseGameLayer) {
 	void createPlayer() {
 		auto& d = Data::get();
@@ -88,9 +96,9 @@ class $modify(GJBaseGameLayer) {
 	virtual void update(float delta) {
 		auto& d = Data::get();
 		auto& p = Particle::get();
-		d.legacyTracking = Mod::get()->getSettingValue<bool>("legacy-tracking");
-		d.legacyScaling = Mod::get()->getSettingValue<bool>("legacy-scaling");
-		d.inconstVal = Mod::get()->getSettingValue<bool>("inconst-values");
+		d.legacyTracking = getSettingValue<bool>("legacy-tracking");
+		d.legacyScaling = getSettingValue<bool>("legacy-scaling");
+		d.inconstVal = getSettingValue<bool>("inconst-values");
 
 		PlayerObject* player[2]{
 			m_player1,
