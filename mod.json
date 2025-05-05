@@ -1,5 +1,5 @@
 {
-	"geode": "4.3.1",
+	"geode": "4.4.0",
 	"gd": {
 		"win": "2.2074",
 		"android": "2.2074",
@@ -11,7 +11,9 @@
 	"version": "v1.0.1",
 	"developer": "SILVERSTAR",
 	"description": "old player particles",
-	"repository": "https://github.com/silver984/True-Legacy-Particles",
+	"links": {
+		"source": "https://github.com/silver984/True-Legacy-Particles"
+	},
 	"tags": [
 		"offline",
 		"customization",
