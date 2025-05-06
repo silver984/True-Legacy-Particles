@@ -107,11 +107,6 @@ class $modify(GJBaseGameLayer) {
 
 		auto& d = Data::get();
 		auto& p = Particle::get();
-		d.legacyTracking = getSettingValue<bool>("legacy-tracking");
-		d.legacyScaling = getSettingValue<bool>("legacy-scaling");
-		d.legacyLand = getSettingValue<bool>("legacy-land");
-		d.inconstVal = getSettingValue<bool>("inconst-values");
-		d.inconstVal = getSettingValue<bool>("inconst-values");
 
 		PlayerObject* player[2]{
 			m_player1,
