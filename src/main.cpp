@@ -4,76 +4,37 @@
 #include <Geode/Geode.hpp>
 #include <Geode/modify/GJBaseGameLayer.hpp>
 #include <Geode/modify/PlayerObject.hpp>
-#include <Geode/modify/PlayLayer.hpp>
 
 using namespace geode::prelude;
-
-class $modify(PlayLayer) {
-	bool init(GJGameLevel* level, bool useReplay, bool dontCreateObjects) {
-		Data::get().isInLevel = true;
-		return PlayLayer::init(level, useReplay, dontCreateObjects);
-	}
-
-	void onQuit() {
-		Data::get().isInLevel = false;
-		PlayLayer::onQuit();
-	}
-};
 
 class $modify(PlayerObject) {
 	void playSpiderDashEffect(cocos2d::CCPoint from, cocos2d::CCPoint to) {
 		auto& p = Particle::get();
+		int index;
 
-		if (!m_isSecondPlayer) {
-			p[0].spiderDashed = true;
-			p[0].framesBeforeSpiderDashed = 0;
-		}
-		else {
-			p[1].spiderDashed = true;
-			p[1].framesBeforeSpiderDashed = 0;
-		}
+		if (!m_isSecondPlayer)
+			index = 0;
+		else
+			index = 1;
+
+		p[index].spiderDashed = true;
+		p[index].framesBeforeSpiderDashed = 0;
 
 		PlayerObject::playSpiderDashEffect(from, to);
 	}
 
-	// structs are used below for parameters in order to not exceed 80 characters in one line of code
-	// (as stated in the geode doc)
-
 	void togglePlayerScale(bool isMini, bool p1) {
-		auto& d = Data::get();
-		ScaleParams params = {
-			m_isSecondPlayer,
-			d.isInLevel,
-			d.legacyTracking,
-			d.inconstVal,
-			d.legacyScaling,
-			isMini
-		};
-		scale(params);
+		scale(isMini, m_isSecondPlayer);
 		PlayerObject::togglePlayerScale(isMini, p1);
 	}
 
 	void toggleRobotMode(bool isRobot, bool p1) {
-		auto& d = Data::get();
-		WideParams params = {
-			m_isSecondPlayer,
-			d.legacyTracking,
-			d.inconstVal,
-			isRobot
-		};
-		wide(params);
+		wide(isRobot, m_isSecondPlayer);
 		PlayerObject::toggleRobotMode(isRobot, p1);
 	}
 
 	void toggleSpiderMode(bool isSpider, bool p1) {
-		auto& d = Data::get();
-		WideParams params = {
-			m_isSecondPlayer,
-			d.legacyTracking,
-			d.inconstVal,
-			isSpider
-		};
-		wide(params);
+		wide(isSpider, m_isSecondPlayer);
 		PlayerObject::toggleSpiderMode(isSpider, p1);
 	}
 };
@@ -82,15 +43,15 @@ class $modify(GJBaseGameLayer) {
 	virtual bool init() {
 		auto& d = Data::get();
 		d.legacyTracking = Mod::get()->getSettingValue<bool>("legacy-tracking");
-		d.legacyScaling = Mod::get()->getSettingValue<bool>("legacy-scaling");
-		d.inconstVal = Mod::get()->getSettingValue<bool>("legacy-land");
 		d.legacyLand = Mod::get()->getSettingValue<bool>("legacy-land");
+		d.legacyScaling = Mod::get()->getSettingValue<bool>("legacy-scaling");
+		d.inconstVal = Mod::get()->getSettingValue<bool>("inconst-values");
 		d.centerDash = Mod::get()->getSettingValue<bool>("center-dash");
 		return GJBaseGameLayer::init();
 	}
 
 	void createPlayer() {
-		reset(Data::get().isInLevel);
+		reset();
 		GJBaseGameLayer::createPlayer();
 	}
 
@@ -99,33 +60,14 @@ class $modify(GJBaseGameLayer) {
 
 		auto& d = Data::get();
 		auto& p = Particle::get();
-
 		PlayerObject* player[2]{
 			m_player1,
 			m_player2
 		};
 
-		CoreParams params1 = {
-			m_player1,
-			0,
-			d.legacyTracking,
-			d.inconstVal,
-			d.legacyScaling,
-			delta
-		};
-		core(params1);
-
-		CoreParams params2 = {
-			m_player2,
-			1,
-			d.legacyTracking,
-			d.inconstVal,
-			d.legacyScaling,
-			delta
-		};
-		core(params2);
-
 		for (int i = 0; i < 2; i++) {
+			core(player[i], i, delta);
+
 			p[i].framesBeforeSpiderDashed++;
 
 			if (d.centerDash)

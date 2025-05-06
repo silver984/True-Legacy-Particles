@@ -8,7 +8,7 @@
 	},
 	"id": "silverstar.legacy-particles",
 	"name": "True Legacy Particles",
-	"version": "v1.1.0",
+	"version": "v1.1.1",
 	"developer": "SILVERSTAR",
 	"description": "old player particles",
 	"links": {
@@ -45,7 +45,7 @@
 			"default": true
 		},
 		"center-dash": {
-			"name": "Center The Dash Particles",
+			"name": "Centered Dash Particles",
 			"type": "bool",
 			"default": true
 		}

@@ -2,15 +2,12 @@
 #include "data.hpp"
 #include <Geode/modify/GJBaseGameLayer.hpp>
 
-void legacyTrackingFunc(bool guard, int index, float delta, PlayerObject* p) {
-	auto& prtcl = Particle::get();
+void legacyTrackingFunc(PlayerObject* p, int index, float delta) {
+	if (!Data::get().legacyTracking)
+		return;
+
+	auto& particle = Particle::get();
 	auto& x = Particle::Extra::get();
-
-	if (!guard)
-		return;
-
-	if (!p->m_playerGroundParticles)
-		return;
 
 	if (p->m_isOnGround) {
 		CCPoint ground = p->m_playerGroundParticles->m_obPosition;
@@ -20,12 +17,12 @@ void legacyTrackingFunc(bool guard, int index, float delta, PlayerObject* p) {
 		x[index].offGroundPos = CCPoint(air);
 	}
 
-	if (prtcl[index].framesBeforeSpiderDashed >= (2 * ((1.f / 60) / delta))) {
+	if (particle[index].framesBeforeSpiderDashed >= (2 * ((1.f / 60) / delta))) {
 		if (p->m_isOnGround)
-			prtcl[index].spiderDashed = false;
+			particle[index].spiderDashed = false;
 	}
 
-	if (!prtcl[index].spiderDashed) {
+	if (!particle[index].spiderDashed) {
 		if (!(p->m_isShip || p->m_isBird || p->m_isDart || p->m_isSwing)) {
 			CCPoint newPos = CCPoint(p->m_position + x[index].offGroundPos);
 			p->m_playerGroundParticles->setPosition(newPos);
@@ -37,36 +34,36 @@ void legacyTrackingFunc(bool guard, int index, float delta, PlayerObject* p) {
 		p->m_playerGroundParticles->setPosition(CCPoint(0, 0));
 }
 
-void legacyScalingFunc(bool guard, PlayerObject* p) {
-	if (!guard)
+void legacyScalingFunc(PlayerObject* p) {
+	if (!Data::get().legacyScaling)
 		return;
 
 	for (auto system : CCArrayExt<CCParticleSystem*>(p->m_particleSystems)) {
-		system->loadScaledDefaults(1.f);
+		if (p->m_vehicleSize != 1.f)
+			system->loadScaledDefaults(1.f);
+
 		system->setScale(p->m_vehicleSize);
 	}
 }
 
-void inconstValFunc(bool guard, bool scaling, int index, PlayerObject* p) {
-	auto& drag = Particle::Drag::get();
-	auto& trail = Particle::Trail::get();
-	auto& shipClick = Particle::ShipClick::get();
-
-	if (!guard)
+void inconstValFunc(PlayerObject* p, int index) {
+	if (!Data::get().inconstVal)
 		return;
 
-	float m;
-	if (scaling)
+	float m; // multiplier
+	if (Data::get().legacyScaling)
 		m = 1.f;
 	else
 		m = p->m_vehicleSize;
 
-	p->m_playerGroundParticles->setPosVar(drag[index].posVar * m);
+	auto& drag = Particle::Drag::get();
+	auto& trail = Particle::Trail::get();
+	auto& shipClick = Particle::ShipClick::get();
 
+	p->m_playerGroundParticles->setPosVar(drag[index].posVar * m);
 	p->m_trailingParticles->setPosVar(trail[index].posVar * m);
 	p->m_trailingParticles->setSpeed(trail[index].speed * m);
 	p->m_trailingParticles->setSpeedVar(trail[index].speedVar * m);
-
 	p->m_shipClickParticles->setPosVar(shipClick[index].posVar * m);
 	p->m_shipClickParticles->setSpeed(shipClick[index].speed * m);
 	p->m_shipClickParticles->setSpeedVar(shipClick[index].speedVar * m);
@@ -74,39 +71,36 @@ void inconstValFunc(bool guard, bool scaling, int index, PlayerObject* p) {
 	p->m_shipClickParticles->setStartSizeVar(shipClick[index].startSizeVar * m);
 }
 
-void core(const CoreParams& c) {
-	legacyTrackingFunc(c.legacyTracking, c.index, c.delta, c.p);
-	legacyScalingFunc(c.legacyScaling, c.p);
-	inconstValFunc(c.inconstVal, c.legacyScaling, c.index, c.p);
+void core(PlayerObject* player, int index, float delta) {;
+	legacyTrackingFunc(player, index, delta);
+	legacyScalingFunc(player);
+	inconstValFunc(player, index);
 }
 
-void scale(const ScaleParams& s) {
-	auto& drag = Particle::Drag::get();
-	auto& trail = Particle::Trail::get();
-	auto& shipClick = Particle::ShipClick::get();
+void scale(bool isMini, bool isSecondPlayer) {
+	auto& d = Data::get();
 
-	bool guard = s.isInLevel || s.inconstVal;
-	if (!guard)
+	if (!d.inconstVal)
 		return;
-
-	if (!s.isMini)
+	if (!isMini)
 		return;
-	
-	if (s.legacyScaling)
+	if (d.legacyScaling)
 		return;
 
 	int index;
-	if (!s.isSecondPlayer)
+	if (!isSecondPlayer)
 		index = 0;
 	else
 		index = 1;
 
-	drag[index].posVar = drag[index].srcPV;
+	auto& drag = Particle::Drag::get();
+	auto& trail = Particle::Trail::get();
+	auto& shipClick = Particle::ShipClick::get();
 
+	drag[index].posVar = drag[index].srcPV;
 	trail[index].posVar = drag[index].srcPV;
 	trail[index].speed = drag[index].speed;
 	trail[index].speedVar = drag[index].speedVar;
-
 	shipClick[index].posVar = drag[index].srcPV;
 	shipClick[index].speed = drag[index].speed;
 	shipClick[index].speedVar = drag[index].speedVar;
@@ -114,17 +108,16 @@ void scale(const ScaleParams& s) {
 	shipClick[index].startSizeVar = drag[index].startSizeVar;
 }
 
-void wide(const WideParams& w) {
+void wide(bool isMode, bool isSecondPlayer) {
+	auto& d = Data::get();
+
+	if (!d.inconstVal)
+		return;
+	if (!isMode)
+		return;
+
 	auto& drag = Particle::Drag::get();
-
-	bool guard = w.isInLevel || w.inconstVal;
-	if (!guard)
-		return;
-
-	if (!w.isMode)
-		return;
-
-	if (!w.isSecondPlayer)
+	if (!isSecondPlayer)
 		drag[0].posVar = CCPoint(15, 0);
 	else
 		drag[1].posVar = CCPoint(15, 0);
@@ -143,14 +136,11 @@ void spiderDash(bool isSecondPlayer) {
 	}
 }
 
-void reset(bool isInLevel) {
+void reset() {
 	auto& particle = Particle::get();
 	auto& drag = Particle::Drag::get();
 	auto& trail = Particle::Trail::get();
 	auto& shipClick = Particle::ShipClick::get();
-
-	if (!isInLevel)
-		return;
 
 	for (int i = 0; i < 2; i++) {
 		trail[i].posVar = CCPoint(0, 2);

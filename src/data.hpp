@@ -1,8 +1,5 @@
 #pragma once
 
-#include <Geode/Geode.hpp>
-using namespace geode::prelude;
-
 class Data {
 public:
 	static Data& get() {
@@ -10,7 +7,6 @@ public:
 		return instance;
 	}
 
-	bool isInLevel;
 	bool legacyTracking;
 	bool legacyScaling;
 	bool legacyLand;

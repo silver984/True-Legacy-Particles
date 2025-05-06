@@ -75,33 +75,8 @@ public:
 	};
 };
 
-struct ScaleParams {
-	bool isSecondPlayer;
-	bool isInLevel;
-	bool legacyTracking;
-	bool inconstVal;
-	bool legacyScaling;
-	bool isMini;
-};
-
-struct CoreParams {
-	PlayerObject* p;
-	int index;
-	bool legacyTracking;
-	bool inconstVal;
-	bool legacyScaling;
-	float delta;
-};
-
-struct WideParams {
-	bool isSecondPlayer;
-	bool isInLevel;
-	bool inconstVal;
-	bool isMode;
-};
-
-void core(const CoreParams& c);
-void scale(const ScaleParams& s);
-void wide(const WideParams& w);
+void core(PlayerObject* player, int index, float delta);
+void scale(bool isMini, bool isSecondPlayer);
+void wide(bool isMode, bool isSecondPlayer);
 void spiderDash(bool isSecondPlayer);
-void reset(bool isInLevel);
+void reset();
