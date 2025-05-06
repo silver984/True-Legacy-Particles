@@ -36,15 +36,6 @@ class $modify(PlayerObject) {
 		PlayerObject::playSpiderDashEffect(from, to);
 	}
 
-	void hitGround(GameObject* p0, bool p1) {
-		if (!Data::get().legacyLand) {
-			PlayerObject::hitGround(p0, p1);
-			return;
-		}
-
-		PlayerObject::hitGround(p0, p1);
-	}
-
 	// structs are used below for parameters in order to not exceed 80 characters in one line of code
 	// (as stated in the geode doc)
 
