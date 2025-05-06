@@ -92,6 +92,7 @@ class $modify(GJBaseGameLayer) {
 		auto& d = Data::get();
 		d.legacyTracking = Mod::get()->getSettingValue<bool>("legacy-tracking");
 		d.legacyScaling = Mod::get()->getSettingValue<bool>("legacy-scaling");
+		d.inconstVal = Mod::get()->getSettingValue<bool>("legacy-land");
 		d.legacyLand = Mod::get()->getSettingValue<bool>("legacy-land");
 		d.centerDash = Mod::get()->getSettingValue<bool>("center-dash");
 		return GJBaseGameLayer::init();
