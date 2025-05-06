@@ -11,8 +11,9 @@ public:
 	}
 
 	bool isInLevel;
-	float deltaTime = 1.f / 60;
 	bool legacyTracking;
 	bool legacyScaling;
+	bool legacyLand;
 	bool inconstVal;
+	bool centerDash;
 };

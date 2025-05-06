@@ -1,4 +1,4 @@
-name: Build Geode Mod
+name: Build TLP
 
 on:
   workflow_dispatch:

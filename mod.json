@@ -8,7 +8,7 @@
 	},
 	"id": "silverstar.legacy-particles",
 	"name": "True Legacy Particles",
-	"version": "v1.0.1",
+	"version": "v1.1.0",
 	"developer": "SILVERSTAR",
 	"description": "old player particles",
 	"links": {
@@ -32,10 +32,21 @@
 			"description": "Restores how particles followed the player when mini mode was first introduced.",
 			"default": false
 		},
+		"legacy-land": {
+			"name": "Legacy Land",
+			"type": "bool",
+			"description": "Disables rotation.",
+			"default": true
+		},
 		"inconst-values": {
 			"name": "Inconsistent Values",
 			"type": "bool",
 			"description": "Restores how particles change after entering certain portals.",
+			"default": true
+		},
+		"center-dash": {
+			"name": "Center The Dash Particles",
+			"type": "bool",
 			"default": true
 		}
 	}

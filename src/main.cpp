@@ -36,6 +36,15 @@ class $modify(PlayerObject) {
 		PlayerObject::playSpiderDashEffect(from, to);
 	}
 
+	void hitGround(GameObject* p0, bool p1) {
+		if (!Data::get().legacyLand) {
+			PlayerObject::hitGround(p0, p1);
+			return;
+		}
+
+		PlayerObject::hitGround(p0, p1);
+	}
+
 	// structs are used below for parameters in order to not exceed 80 characters in one line of code
 	// (as stated in the geode doc)
 
@@ -78,26 +87,30 @@ class $modify(PlayerObject) {
 	}
 };
 
-template <typename T>
-T getSettingValue(std::string_view name) {
-	static T value = (listenForSettingChangesV3<T>(name, [](T val) {
-		value = val;
-	}), Mod::get()->getSettingValue<T>(name));
-	return value;
-}
-
 class $modify(GJBaseGameLayer) {
-	void createPlayer() {
+	virtual bool init() {
 		auto& d = Data::get();
-		reset(d.isInLevel);
+		d.legacyTracking = Mod::get()->getSettingValue<bool>("legacy-tracking");
+		d.legacyScaling = Mod::get()->getSettingValue<bool>("legacy-scaling");
+		d.legacyLand = Mod::get()->getSettingValue<bool>("legacy-land");
+		d.centerDash = Mod::get()->getSettingValue<bool>("center-dash");
+		return GJBaseGameLayer::init();
+	}
+
+	void createPlayer() {
+		reset(Data::get().isInLevel);
 		GJBaseGameLayer::createPlayer();
 	}
 
 	virtual void update(float delta) {
+		GJBaseGameLayer::update(delta);
+
 		auto& d = Data::get();
 		auto& p = Particle::get();
 		d.legacyTracking = getSettingValue<bool>("legacy-tracking");
 		d.legacyScaling = getSettingValue<bool>("legacy-scaling");
+		d.legacyLand = getSettingValue<bool>("legacy-land");
+		d.inconstVal = getSettingValue<bool>("inconst-values");
 		d.inconstVal = getSettingValue<bool>("inconst-values");
 
 		PlayerObject* player[2]{
@@ -127,11 +140,14 @@ class $modify(GJBaseGameLayer) {
 
 		for (int i = 0; i < 2; i++) {
 			p[i].framesBeforeSpiderDashed++;
-			// player[i]->m_dashParticles->setPosition(player[i]->m_obPosition); TO-DO! for some reason this actually doesnt center the dash particles
-			player[i]->m_landParticles0->setRotation(0);
-			player[i]->m_landParticles1->setRotation(0);
-		}
 
-		GJBaseGameLayer::update(delta);
+			if (d.centerDash)
+				player[i]->m_dashParticles->setPositionY(player[i]->getPositionY());
+
+			if (d.legacyLand) {
+				player[i]->m_landParticles0->setRotation(0);
+				player[i]->m_landParticles1->setRotation(0);
+			}
+		}
 	}
 };

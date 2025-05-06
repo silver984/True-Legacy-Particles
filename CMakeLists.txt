@@ -8,7 +8,7 @@ else()
 endif()
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 
-project(particleovershoot VERSION 1.0.0)
+project(truelegacyparticles VERSION 1.0.0)
 
 # Set up the mod binary
 add_library(${PROJECT_NAME} SHARED
