@@ -71,13 +71,30 @@ void inconstValFunc(PlayerObject* p, int index) {
 	p->m_shipClickParticles->setStartSizeVar(shipClick[index].startSizeVar * m);
 }
 
-void core(PlayerObject* player, int index, float delta) {;
+void core(PlayerObject* player, int index, float delta) {
+	auto& d = Data::get();
+	if (!d.modSwitch)
+		return;
+
+	if (!d.player1) {
+		if (!player->m_isSecondPlayer)
+			return;
+	}
+
+	if (!d.player2) {
+		if (player->m_isSecondPlayer)
+			return;
+	}
+
 	legacyTrackingFunc(player, index, delta);
 	legacyScalingFunc(player);
 	inconstValFunc(player, index);
 }
 
 void scale(bool isMini, bool isSecondPlayer) {
+	if (!Data::get().modSwitch)
+		return;
+
 	auto& d = Data::get();
 
 	if (!d.inconstVal)
@@ -109,6 +126,9 @@ void scale(bool isMini, bool isSecondPlayer) {
 }
 
 void wide(bool isMode, bool isSecondPlayer) {
+	if (!Data::get().modSwitch)
+		return;
+
 	auto& d = Data::get();
 
 	if (!d.inconstVal)
@@ -124,6 +144,9 @@ void wide(bool isMode, bool isSecondPlayer) {
 }
 
 void spiderDash(bool isSecondPlayer) {
+	if (!Data::get().modSwitch)
+		return;
+
 	auto& particle = Particle::get();
 
 	if (isSecondPlayer) {
@@ -137,6 +160,9 @@ void spiderDash(bool isSecondPlayer) {
 }
 
 void reset() {
+	if (!Data::get().modSwitch)
+		return;
+
 	auto& particle = Particle::get();
 	auto& drag = Particle::Drag::get();
 	auto& trail = Particle::Trail::get();

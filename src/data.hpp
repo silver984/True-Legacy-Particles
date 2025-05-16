@@ -7,9 +7,14 @@ public:
 		return instance;
 	}
 
+	bool modSwitch;
 	bool legacyTracking;
 	bool legacyScaling;
-	bool legacyLand;
 	bool inconstVal;
+	bool noRotation;
 	bool centerDash;
+	bool centerDashX;
+	bool centerDashY;
+	bool player1;
+	bool player2;
 };

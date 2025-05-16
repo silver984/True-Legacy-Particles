@@ -1,5 +1,9 @@
 # True Legacy Particles
 
+## 1.2.0
+- Better configurations
+- A little more customizability
+
 ## 1.1.1
 - Fixed Legacy Scaling
 

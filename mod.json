@@ -8,7 +8,7 @@
 	},
 	"id": "silverstar.legacy-particles",
 	"name": "True Legacy Particles",
-	"version": "v1.1.1",
+	"version": "v1.2.0",
 	"developer": "SILVERSTAR",
 	"description": "old player particles",
 	"links": {
@@ -20,33 +20,84 @@
 		"gameplay"
 	],
 	"settings": {
+		"switch": {
+			"name": "Turn mod ON or OFF",
+			"type": "bool",
+			"default": true
+		},
+		"ground-particles": {
+			"type": "title",
+			"name": "Ground Particle settings"
+		},
 		"legacy-tracking": {
 			"name": "Legacy Tracking",
 			"type": "bool",
 			"description": "Restores how ground particles followed the player.",
+			"enable-if": "switch",
 			"default": true
 		},
 		"legacy-scaling": {
 			"name": "Legacy Scaling",
 			"type": "bool",
 			"description": "Restores how particles followed the player when mini mode was first introduced.",
+			"enable-if": "switch",
 			"default": false
-		},
-		"legacy-land": {
-			"name": "Legacy Land",
-			"type": "bool",
-			"description": "Disables rotation.",
-			"default": true
 		},
 		"inconst-values": {
 			"name": "Inconsistent Values",
 			"type": "bool",
 			"description": "Restores how particles change after entering certain portals.",
+			"enable-if": "switch",
 			"default": true
+		},
+		"land-particles": {
+			"type": "title",
+			"name": "Land Particle settings"
+		},
+		"no-rotation": {
+			"name": "No Rotation",
+			"type": "bool",
+			"enable-if": "switch",
+			"default": true
+		},
+		"dash-particles": {
+			"type": "title",
+			"name": "Dash Particle settings"
 		},
 		"center-dash": {
 			"name": "Centered Dash Particles",
 			"type": "bool",
+			"enable-if": "switch",
+			"default": true
+		},
+		"center-dash-x": {
+			"name": "x axis",
+			"type": "bool",
+			"description": "Center the x axis.",
+			"enable-if": "center-dash && switch",
+			"default": true
+		},
+		"center-dash-y": {
+			"name": "y axis",
+			"type": "bool",
+			"description": "Center the y axis.",
+			"enable-if": "center-dash && switch",
+			"default": true
+		},
+		"misc": {
+			"type": "title",
+			"name": "Miscellaneous"
+		},
+		"player-1": {
+			"name": "Player 1",
+			"type": "bool",
+			"enable-if": "switch",
+			"default": true
+		},
+		"player-2": {
+			"name": "Player 2",
+			"type": "bool",
+			"enable-if": "switch",
 			"default": true
 		}
 	}
