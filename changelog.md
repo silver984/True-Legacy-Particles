@@ -1,5 +1,10 @@
 # True Legacy Particles
 
+## 1.3.0
+- Finally works for the menu icons
+- Changed mod description
+- Changed the descriptions of features
+
 ## 1.2.0
 - Better configurations
 - A little more customizability

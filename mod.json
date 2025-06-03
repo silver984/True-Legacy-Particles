@@ -10,7 +10,7 @@
 	"name": "True Legacy Particles",
 	"version": "v1.2.0",
 	"developer": "SILVERSTAR",
-	"description": "old player particles",
+	"description": "",
 	"links": {
 		"source": "https://github.com/silver984/True-Legacy-Particles"
 	},
@@ -21,13 +21,13 @@
 	],
 	"settings": {
 		"switch": {
-			"name": "Turn mod ON or OFF",
+			"name": "Turn TLP ON",
 			"type": "bool",
 			"default": true
 		},
 		"ground-particles": {
 			"type": "title",
-			"name": "Ground Particle settings"
+			"name": "Player particle system setting(s)"
 		},
 		"legacy-tracking": {
 			"name": "Legacy Tracking",
@@ -39,20 +39,20 @@
 		"legacy-scaling": {
 			"name": "Legacy Scaling",
 			"type": "bool",
-			"description": "Restores how particles followed the player when mini mode was first introduced.",
+			"description": "Restores how the player's particles were scaled down when you enter a mini portal.",
 			"enable-if": "switch",
 			"default": false
 		},
 		"inconst-values": {
 			"name": "Inconsistent Values",
 			"type": "bool",
-			"description": "Restores how particles change after entering certain portals.",
+			"description": "Restores how the player's particles change and shift in space, speed, and size after entering certain portals.",
 			"enable-if": "switch",
 			"default": true
 		},
 		"land-particles": {
 			"type": "title",
-			"name": "Land Particle settings"
+			"name": "Player land particle setting(s)"
 		},
 		"no-rotation": {
 			"name": "No Rotation",
@@ -62,7 +62,7 @@
 		},
 		"dash-particles": {
 			"type": "title",
-			"name": "Dash Particle settings"
+			"name": "Dash particle setting(s)"
 		},
 		"center-dash": {
 			"name": "Centered Dash Particles",

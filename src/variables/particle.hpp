@@ -11,30 +11,39 @@ public:
 		return instance;
 	}
 
-	int framesBeforeSpiderDashed = 0;
 	bool spiderDashed = false;
 
 	class Drag {
 	private:
-		CCDictionary* d = CCDictionary::createWithContentsOfFile("dragEffect.plist");
-		CCString* posVarXStr = (CCString*)d->objectForKey("sourcePositionVariancex");
-		CCString* posVarYStr = (CCString*)d->objectForKey("sourcePositionVariancey");
-		CCString* speedStr = (CCString*)d->objectForKey("speed");
-		CCString* speedVarStr = (CCString*)d->objectForKey("speedVariance");
-		CCString* sStr = (CCString*)d->objectForKey("startParticleSize");
-		CCString* sVarStr = (CCString*)d->objectForKey("startParticleSizeVariance");
+		CCDictionary* dict =
+			CCDictionary::createWithContentsOfFile("dragEffect.plist");
+
+		CCPoint sourceStartSize = CCPoint(
+			((CCString*)dict->objectForKey("startParticleSize"))->floatValue(),
+			((CCString*)dict->objectForKey("startParticleSizeVariance"))->floatValue()
+		);
+
+		CCPoint sourceSpeed = CCPoint(
+			((CCString*)dict->objectForKey("speed"))->floatValue(),
+			((CCString*)dict->objectForKey("speedVariance"))->floatValue()
+		);
 	public:
 		static std::array<Drag, 2>& get() {
 			static std::array<Drag, 2> instance;
 			return instance;
 		}
 
-		CCPoint srcPV = CCPoint(posVarXStr->floatValue(), posVarYStr->floatValue());
-		float speed = speedStr->floatValue();
-		float speedVar = speedVarStr->floatValue();
-		float startSize = sStr->floatValue();
-		float startSizeVar = sVarStr->floatValue();
-		CCPoint posVar = srcPV;
+		float speed = sourceSpeed.x;
+		float speedVar = sourceSpeed.y;
+		float startSize = sourceStartSize.x;
+		float startSizeVar = sourceStartSize.y;
+
+		CCPoint sourcePosVar = CCPoint(
+			((CCString*)dict->objectForKey("sourcePositionVariancex"))->floatValue(),
+			((CCString*)dict->objectForKey("sourcePositionVariancey"))->floatValue()
+		);
+
+		CCPoint posVar = sourcePosVar;
 	};
 
 	class Trail {
@@ -75,8 +84,10 @@ public:
 	};
 };
 
-void core(PlayerObject* player, int index, float delta);
-void scale(bool isMini, bool isSecondPlayer);
-void wide(bool isMode, bool isSecondPlayer);
-void spiderDash(bool isSecondPlayer);
-void reset();
+extern std::array<Particle, 2>& particle;
+extern std::array<Particle::Drag, 2>& drag;
+extern std::array<Particle::Trail, 2>& trail;
+extern std::array<Particle::ShipClick, 2>& shipClick;
+extern std::array<Particle::Extra, 2>& extra;
+
+extern bool isInLevel;
