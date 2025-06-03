@@ -15,9 +15,6 @@ void inconsistentVal(PlayerObject* player) {
 		multiplier = 1.f;
 	else
 		multiplier = player->m_vehicleSize;
-	auto& drag = Particle::Drag::get();
-	auto& trail = Particle::Trail::get();
-	auto& shipClick = Particle::ShipClick::get();
 	auto groundParticles = player->m_playerGroundParticles;
 	auto trailParticles = player->m_trailingParticles;
 	auto shipParticles = player->m_shipClickParticles;
