@@ -11,7 +11,7 @@ This mod utilizes a .plist file called "dragEffect" in the game files. If ever t
 
 - **Legacy Tracking** - Restores how ground particles followed the player. On by default.
 - **Legacy Scaling** - Restores how the player's particles were scaled down when you enter a mini portal. Off by default.
-- **Inconsistent Values** - Restores how the player's particles change and shift in space, speed, and size after entering certain portals. On by default.
+- **True Values** - Restores how the player's particles change and shift in space, speed, and size after entering certain portals. On by default.
 
 ### Player land particle setting(s)
 

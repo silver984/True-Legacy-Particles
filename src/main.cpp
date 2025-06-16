@@ -1,5 +1,6 @@
 #include <Geode/Geode.hpp>
 #include <Geode/modify/PlayerObject.hpp>
+#include <Geode/modify/GJBaseGameLayer.hpp>
 #include "functions/Core.hpp"
 #include "functions/util.hpp"
 #include "functions/variance.hpp"
@@ -16,7 +17,7 @@ class $modify(PlayerObject) {
 		toggle = Mod::get()->getSettingValue<bool>("switch");
 		legacyTracking = Mod::get()->getSettingValue<bool>("legacy-tracking");
 		legacyScaling = Mod::get()->getSettingValue<bool>("legacy-scaling");
-		inconstVal = Mod::get()->getSettingValue<bool>("inconst-values");
+		isTrueVals = Mod::get()->getSettingValue<bool>("true-vals");
 		noRotation = Mod::get()->getSettingValue<bool>("no-rotation");
 		centerDash = Mod::get()->getSettingValue<bool>("center-dash");
 		player1 = Mod::get()->getSettingValue<bool>("player-1");
@@ -32,20 +33,63 @@ class $modify(PlayerObject) {
 		}
 
 		for (int i = 0; i < 2; i++) {
-			trail[i].posVar = CCPoint(0, 2);
-			trail[i].speed = 15;
-			trail[i].speedVar = 4;
+			CCDictionary* dict =
+				CCDictionary::createWithContentsOfFile("dragEffect.plist");
 
-			shipClick[i].posVar = CCPoint(0, 2);
-			shipClick[i].speed = 150;
-			shipClick[i].speedVar = 40;
-			shipClick[i].startSize = 6;
-			shipClick[i].startSizeVar = 4.5;
+			sourceGravity = CCPoint(
+				((CCString*)dict->objectForKey("gravityx"))->floatValue(),
+				((CCString*)dict->objectForKey("gravityy"))->floatValue()
+			);
 
-			drag[i].posVar = drag[i].sourcePosVar;
+			// y for variance
+			sourceAngle = CCPoint(
+				((CCString*)dict->objectForKey("angle"))->floatValue(),
+				((CCString*)dict->objectForKey("angleVariance"))->floatValue()
+			);
+
+			// y for variance
+			sourceStartSize = CCPoint(
+				((CCString*)dict->objectForKey("startParticleSize"))->floatValue(),
+				((CCString*)dict->objectForKey("startParticleSizeVariance"))->floatValue()
+			);
+
+			// y for variance
+			sourceSpeed = CCPoint(
+				((CCString*)dict->objectForKey("speed"))->floatValue(),
+				((CCString*)dict->objectForKey("speedVariance"))->floatValue()
+			);
+
+			sourcePosVar = CCPoint(
+				((CCString*)dict->objectForKey("sourcePositionVariancex"))->floatValue(),
+				((CCString*)dict->objectForKey("sourcePositionVariancey"))->floatValue()
+			);
+
+			drag[i].posVar = sourcePosVar;
+			drag[i].speed = sourceSpeed.x;
+			drag[i].speedVar = sourceSpeed.y;
+			drag[i].startSize = sourceStartSize.x;
+			drag[i].startSizeVar = sourceStartSize.y;
+
+			trail[i].posVar = CCPoint(0, sourcePosVar.y * 0.4);
+			trail[i].speed = sourceSpeed.x * 0.2;
+			trail[i].speedVar = sourceSpeed.y * 0.2;
+
+			shipClick[i].posVar = CCPoint(0, sourcePosVar.y * 0.4);
+			shipClick[i].speed = sourceSpeed.x * 2;
+			shipClick[i].speedVar = sourceSpeed.y * 2;
+			shipClick[i].startSize = sourceStartSize.x * 1.5;
+			shipClick[i].startSizeVar = sourceStartSize.y * 1.5;
+
+			angleTweak[i] = 0;
 		}
 
 		return true;
+	}
+
+	virtual void resetObject() {
+		m_landParticles0->setRotation(0);
+		m_landParticles1->setRotation(0);
+		PlayerObject::resetObject();
 	}
 
 	void playSpiderDashEffect(cocos2d::CCPoint from, cocos2d::CCPoint to) {
@@ -84,8 +128,10 @@ class $modify(PlayerObject) {
 			m_dashParticles->setPositionY(this->getPositionY());
 
 		if (noRotation) {
-			m_landParticles0->setRotation(0);
-			m_landParticles1->setRotation(0);
+			m_landParticles0->setRotation(ceil(m_landParticles0->getRotation() / 90.f) * 90.f);
+			m_landParticles1->setRotation(ceil(m_landParticles1->getRotation() / 90.f) * 90.f);
 		}
+
+		angleTweak[index(this)] = ceil(((m_landParticles0->getRotation() + m_landParticles1->getRotation()) / 2.f) / 90.f) * 90.f;
 	}
 };

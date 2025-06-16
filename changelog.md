@@ -1,5 +1,11 @@
 # True Legacy Particles
 
+## 1.3.1
+- No need to restart after modifying dragEffect.plist with Texture Loader
+- Particle values are finally accurate
+- Renamed Inconsistent Values to True Values
+- Upgraded to Geode 4.5.0
+
 ## 1.3.0
 - Finally works for the menu icons
 - Changed mod description

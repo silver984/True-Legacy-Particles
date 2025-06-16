@@ -1,5 +1,5 @@
 {
-	"geode": "4.4.0",
+	"geode": "4.5.0",
 	"gd": {
 		"win": "2.2074",
 		"android": "2.2074",
@@ -8,7 +8,7 @@
 	},
 	"id": "silverstar.legacy-particles",
 	"name": "True Legacy Particles",
-	"version": "v1.3.0",
+	"version": "v1.3.1",
 	"developer": "SILVERSTAR",
 	"description": "",
 	"links": {
@@ -43,8 +43,8 @@
 			"enable-if": "switch",
 			"default": false
 		},
-		"inconst-values": {
-			"name": "Inconsistent Values",
+		"true-vals": {
+			"name": "True Values",
 			"type": "bool",
 			"description": "Restores how the player's particles change and shift in space, speed, and size after entering certain portals.",
 			"enable-if": "switch",

@@ -14,7 +14,7 @@ project(truelegacyparticles VERSION 1.0.0)
 add_library(${PROJECT_NAME} SHARED
     src/main.cpp
     "src/variables/particle.cpp"
-  "src/functions/LegacyTracking.cpp" "src/variables/settings.cpp" "src/functions/Core.cpp"  "src/functions/util.cpp" "src/functions/InconsistentValue.cpp" "src/functions/LegacyScaling.cpp" "src/functions/variance.cpp")
+  "src/functions/LegacyTracking.cpp" "src/variables/settings.cpp" "src/functions/Core.cpp"  "src/functions/util.cpp" "src/functions/TrueValues.cpp" "src/functions/LegacyScaling.cpp" "src/functions/variance.cpp")
 
 if (NOT DEFINED ENV{GEODE_SDK})
     message(FATAL_ERROR "Unable to find Geode SDK! Please define GEODE_SDK environment variable to point to Geode")

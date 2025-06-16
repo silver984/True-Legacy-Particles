@@ -2,7 +2,7 @@
 #include <Geode/modify/PlayerObject.hpp>
 #include "LegacyTracking.hpp"
 #include "LegacyScaling.hpp"
-#include "InconsistentValue.hpp"
+#include "TrueValues.hpp"
 #include "util.hpp"
 #include "../variables/settings.hpp"
 
@@ -12,5 +12,5 @@ using namespace geode::prelude;
 void core(PlayerObject* player) {
 	tracking(player);
 	scaling(player);
-	inconsistentVal(player);
+	trueVals(player);
 }

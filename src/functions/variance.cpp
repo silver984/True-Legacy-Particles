@@ -5,23 +5,23 @@
 #include "../variables/particle.hpp"
 
 void scale(PlayerObject* player, bool isMode) {
-	if (!inconstVal || !isMode || legacyScaling)
+	if (!isTrueVals || !isMode || legacyScaling)
 		return;
 
 	int i = index(player);
-	drag[i].posVar = drag[i].sourcePosVar;
-	trail[i].posVar = drag[i].posVar;
-	trail[i].speed = drag[i].speed;
-	trail[i].speedVar = drag[i].speedVar;
-	shipClick[i].posVar = drag[i].posVar;
-	shipClick[i].speed = drag[i].speed;
-	shipClick[i].speedVar = drag[i].speedVar;
-	shipClick[i].startSize = drag[i].startSize;
-	shipClick[i].startSizeVar = drag[i].startSizeVar;
+	drag[i].posVar = sourcePosVar;
+	trail[i].posVar = sourcePosVar;
+	trail[i].speed = sourceSpeed.x;
+	trail[i].speedVar = sourceSpeed.y;
+	shipClick[i].posVar = sourcePosVar;
+	shipClick[i].speed = sourceSpeed.x;
+	shipClick[i].speedVar = sourceSpeed.y;
+	shipClick[i].startSize = sourceStartSize.x;
+	shipClick[i].startSizeVar = sourceStartSize.y;
 }
 
 void wide(PlayerObject* player, bool isMode) {
-	if (!inconstVal || !isMode)
+	if (!isTrueVals || !isMode)
 		return;
 
 	int i = index(player);
