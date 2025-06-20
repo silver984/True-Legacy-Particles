@@ -2,6 +2,7 @@
 #include <Geode/modify/PlayerObject.hpp>
 #include <Geode/modify/GJBaseGameLayer.hpp>
 #include "functions/Core.hpp"
+#include "functions/AlwaysSpawn.hpp"
 #include "functions/util.hpp"
 #include "functions/variance.hpp"
 #include "variables/particle.hpp"
@@ -18,6 +19,7 @@ class $modify(PlayerObject) {
 		legacyTracking = Mod::get()->getSettingValue<bool>("legacy-tracking");
 		legacyScaling = Mod::get()->getSettingValue<bool>("legacy-scaling");
 		isTrueVals = Mod::get()->getSettingValue<bool>("true-vals");
+		alwaysSpawn = Mod::get()->getSettingValue<bool>("always-spawn");
 		noRotation = Mod::get()->getSettingValue<bool>("no-rotation");
 		centerDash = Mod::get()->getSettingValue<bool>("center-dash");
 		player1 = Mod::get()->getSettingValue<bool>("player-1");
@@ -81,7 +83,11 @@ class $modify(PlayerObject) {
 			shipClick[i].startSizeVar = sourceStartSize.y * 1.5;
 
 			angleTweak[i] = 0;
+			grounded[i] = 0;
+			gate[i] = 0;
+			landSwitch[i] = 0;
 		}
+
 
 		return true;
 	}
@@ -89,12 +95,17 @@ class $modify(PlayerObject) {
 	virtual void resetObject() {
 		m_landParticles0->setRotation(0);
 		m_landParticles1->setRotation(0);
+
+		for (int i = 0; i < 2; i++) {
+			grounded[i] = 0;
+			gate[i] = 0;
+			landSwitch[i] = 0;
+		}
 		PlayerObject::resetObject();
 	}
 
 	void playSpiderDashEffect(cocos2d::CCPoint from, cocos2d::CCPoint to) {
-		int i = index(this);
-		particle[i].spiderDashed = true;
+		particle[index(this)].spiderDashed = true;
 		PlayerObject::playSpiderDashEffect(from, to);
 	}
 
@@ -113,14 +124,20 @@ class $modify(PlayerObject) {
 		PlayerObject::toggleSpiderMode(isSpider, p1);
 	}
 
+	void hitGround(GameObject* p0, bool p1) {
+		grounded[index(this)] = true;
+		PlayerObject::hitGround(p0, p1);
+	}
+
 	virtual void update(float delta) {
-		if (!check(this, true)) {
-			PlayerObject::update(delta);
-			return;
-		}
+		if (!check(this, true))
+			return PlayerObject::update(delta);
+
 		core(this);
 
 		PlayerObject::update(delta);
+
+		grounded[index(this)] = false;
 
 		if (centerDashX)
 			m_dashParticles->setPositionX(this->getPositionX());
@@ -128,10 +145,17 @@ class $modify(PlayerObject) {
 			m_dashParticles->setPositionY(this->getPositionY());
 
 		if (noRotation) {
-			m_landParticles0->setRotation(ceil(m_landParticles0->getRotation() / 90.f) * 90.f);
-			m_landParticles1->setRotation(ceil(m_landParticles1->getRotation() / 90.f) * 90.f);
+			auto snapToNearest90 = [](float angle) -> float {
+				return angle > 0 ? floor(angle / 90.f) * 90.f :
+					angle < 0 ? ceil(angle / 90.f) * 90.f : 0.f;
+				};
+
+			m_landParticles0->setRotation(snapToNearest90(m_landParticles0->getRotation()));
+			m_landParticles1->setRotation(snapToNearest90(m_landParticles1->getRotation()));
 		}
 
-		angleTweak[index(this)] = ceil(((m_landParticles0->getRotation() + m_landParticles1->getRotation()) / 2.f) / 90.f) * 90.f;
+		float avgRotation = (m_landParticles0->getRotation() + m_landParticles1->getRotation()) / 2.f;
+		angleTweak[index(this)] = avgRotation > 0 ? floor(avgRotation / 90.f) * 90.f :
+			avgRotation < 0 ? ceil(avgRotation / 90.f) * 90.f : 0.f;
 	}
 };

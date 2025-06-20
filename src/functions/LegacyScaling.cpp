@@ -1,6 +1,5 @@
 #include <Geode/modify/PlayerObject.hpp>
 #include <Geode/Geode.hpp>
-#include <Geode/modify/PlayerObject.hpp>
 #include "LegacyScaling.hpp"
 #include "../variables/settings.hpp"
 #include "../variables/particle.hpp"

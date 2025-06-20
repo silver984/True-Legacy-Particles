@@ -4,6 +4,7 @@ bool toggle = true;
 bool legacyTracking = true;
 bool legacyScaling = false;
 bool isTrueVals = true;
+bool alwaysSpawn = true;
 bool noRotation = true;
 bool centerDash = true;
 bool centerDashX = true;

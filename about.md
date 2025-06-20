@@ -16,6 +16,7 @@ This mod utilizes a .plist file called "dragEffect" in the game files. If ever t
 ### Player land particle setting(s)
 
 - **No Rotation** - Disables rotation for the land particles, just like before version 2.2. On by default.
+- **Always Spawn** - Always make sure to spawn when player lands. On by default.
 
 ### Dash particle setting(s)
 

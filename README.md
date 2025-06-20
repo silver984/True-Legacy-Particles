@@ -10,11 +10,12 @@ A very faithful recreation of the old particle system for the player vehicle.
 
 - **Legacy Tracking** `bool` - Restores how ground particles followed the player. `default = true`
 - **Legacy Scaling** `bool` - Restores how the player's particles were scaled down when you enter a mini portal. `default = false`
-- **Inconsistent Values** `bool` - Restores how the player's particles change and shift in space, speed, and size after entering certain portals. `default = false`
+- **True Values** `bool` - Restores how the player's particles change and shift in space, speed, and size after entering certain portals. `default = false`
 
 ### Player land particle setting(s)
 
 - **No Rotation** `bool` - Disables rotation for the land particles, just like before version 2.2. `default = true`
+- **Always Spawn** - Always make sure to spawn when player lands. `default = true`
 
 ### Dash particle setting(s)
 

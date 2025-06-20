@@ -2,6 +2,7 @@
 #include <Geode/modify/PlayerObject.hpp>
 #include "LegacyTracking.hpp"
 #include "LegacyScaling.hpp"
+#include "AlwaysSpawn.hpp"
 #include "TrueValues.hpp"
 #include "util.hpp"
 #include "../variables/settings.hpp"
@@ -13,4 +14,5 @@ void core(PlayerObject* player) {
 	tracking(player);
 	scaling(player);
 	trueVals(player);
+	alwaysSpawnFunc(player);
 }

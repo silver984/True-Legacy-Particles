@@ -10,4 +10,4 @@ CCPoint sourceGravity = CCPoint(0, 0);
 CCPoint sourceStartSize = CCPoint(0, 0);
 CCPoint sourceSpeed = CCPoint(0, 0);
 CCPoint sourcePosVar = CCPoint(0, 0);
-std::array<int, 2> angleTweak = {0, 0};
+std::array<int, 2> angleTweak = { 0, 0 };

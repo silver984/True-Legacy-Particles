@@ -8,7 +8,7 @@
 	},
 	"id": "silverstar.legacy-particles",
 	"name": "True Legacy Particles",
-	"version": "v1.3.1",
+	"version": "v1.4.0",
 	"developer": "SILVERSTAR",
 	"description": "",
 	"links": {
@@ -57,6 +57,13 @@
 		"no-rotation": {
 			"name": "No Rotation",
 			"type": "bool",
+			"enable-if": "switch",
+			"default": true
+		},
+		"always-spawn": {
+			"name": "Always Spawn",
+			"type": "bool",
+			"description": "Always make sure to spawn when player lands.",
 			"enable-if": "switch",
 			"default": true
 		},

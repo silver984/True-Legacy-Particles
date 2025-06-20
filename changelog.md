@@ -1,5 +1,8 @@
 # True Legacy Particles
 
+## 1.4.0
+- New feature "Always Spawn" for land particle settings
+
 ## 1.3.1
 - No need to restart after modifying dragEffect.plist with Texture Loader
 - Particle values are finally accurate
