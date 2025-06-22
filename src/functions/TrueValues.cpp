@@ -10,28 +10,19 @@ void trueVals(PlayerObject* player) {
 	if (!isTrueVals)
 		return;
 
-	float multiplier;
-	int multiplier2;
-	int multiplier3;
-	int multiplier4;
-	multiplier = legacyScaling ? 1.f : player->m_vehicleSize;
-	multiplier2 = player->m_isGoingLeft ? -1 : 1;
-	multiplier3 = player->m_isUpsideDown ? -1 : 1;
-	multiplier4 = player->m_isSideways ? -1 : 1;
+	float size = legacyScaling ? 1.f : player->m_vehicleSize;
+	int upsideDown = player->m_isUpsideDown ? -1 : 1;
+	int sideways = player->m_isSideways ? -1 : 1;
+	int goingLeft = player->m_isGoingLeft ? -1 : 1;
 
 	CCPoint gravity;
 	if (!player->m_isSideways)
-		gravity = CCPoint(sourceGravity.x * multiplier2, sourceGravity.y * multiplier3);
+		gravity = CCPoint(sourceGravity.x * goingLeft, sourceGravity.y * upsideDown);
 	else
-		gravity = CCPoint(sourceGravity.y * multiplier3, sourceGravity.x * multiplier2);
+		gravity = CCPoint(sourceGravity.y * upsideDown, sourceGravity.x * goingLeft);
 
-	int i = index(player);
-
-	float angle;
-	if (player->m_isSideways)
-		angle = sourceAngle.x - (angleTweak[i] * multiplier3);
-	else
-		angle = sourceAngle.x * multiplier3;
+	int tweak = player->m_isSideways ? 270 : 0;
+	float angle = sourceAngle.x * (upsideDown * sideways) + (tweak * sideways);
 
 	float angleVar = sourceAngle.y;
 	auto groundParticles = player->m_playerGroundParticles;
@@ -39,22 +30,22 @@ void trueVals(PlayerObject* player) {
 	auto shipParticles = player->m_shipClickParticles;
 	
 	if (!player->m_isSideways) {
-		groundParticles->setPosVar(drag[i].posVar * multiplier);
-		trailParticles->setPosVar(trail[i].posVar * multiplier);
-		shipParticles->setPosVar(shipClick[i].posVar * multiplier);
+		groundParticles->setPosVar(drag[index(player)].posVar * size);
+		trailParticles->setPosVar(trail[index(player)].posVar * size);
+		shipParticles->setPosVar(shipClick[index(player)].posVar * size);
 	}
 	else {
 		CCPoint dragPosVar = CCPoint(
-			drag[i].posVar.y * multiplier,
-			drag[i].posVar.x * multiplier
+			drag[index(player)].posVar.y * size,
+			drag[index(player)].posVar.x * size
 		);
 		CCPoint trailPosVar = CCPoint(
-			trail[i].posVar.y * multiplier,
-			trail[i].posVar.x * multiplier
+			trail[index(player)].posVar.y * size,
+			trail[index(player)].posVar.x * size
 		);
 		CCPoint shipPosVar = CCPoint(
-			shipClick[i].posVar.y * multiplier,
-			shipClick[i].posVar.x * multiplier
+			shipClick[index(player)].posVar.y * size,
+			shipClick[index(player)].posVar.x * size
 		);
 
 		groundParticles->setPosVar(dragPosVar);
@@ -66,16 +57,16 @@ void trueVals(PlayerObject* player) {
 	groundParticles->setAngleVar(angleVar);
 	groundParticles->setGravity(gravity);
 
-	trailParticles->setSpeed(trail[i].speed * multiplier);
-	trailParticles->setSpeedVar(trail[i].speedVar * multiplier);
+	trailParticles->setSpeed(trail[index(player)].speed * size);
+	trailParticles->setSpeedVar(trail[index(player)].speedVar * size);
 	trailParticles->setAngle(angle);
 	trailParticles->setAngleVar(angleVar);
 	trailParticles->setGravity(gravity);
 
-	shipParticles->setSpeed(shipClick[i].speed * multiplier);
-	shipParticles->setSpeedVar(shipClick[i].speedVar * multiplier);
-	shipParticles->setStartSize(shipClick[i].startSize * multiplier);
-	shipParticles->setStartSizeVar(shipClick[i].startSizeVar * multiplier);
+	shipParticles->setSpeed(shipClick[index(player)].speed * size);
+	shipParticles->setSpeedVar(shipClick[index(player)].speedVar * size);
+	shipParticles->setStartSize(shipClick[index(player)].startSize * size);
+	shipParticles->setStartSizeVar(shipClick[index(player)].startSizeVar * size);
 	shipParticles->setAngle(angle);
 	shipParticles->setAngleVar(angleVar);
 	shipParticles->setGravity(gravity);

@@ -1,5 +1,11 @@
 # True Legacy Particles
 
+## 1.4.1
+- Better logic for Always Spawn
+- Changed the description of Always Spawn
+- Values are actually accurate for sideways gameplay
+- Changed mod logo
+
 ## 1.4.0
 - New feature "Always Spawn" for land particle settings
 

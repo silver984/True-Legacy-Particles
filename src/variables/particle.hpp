@@ -52,6 +52,17 @@ public:
 		float startSizeVar = 0.f;
 	};
 
+	class Land {
+	public:
+		static std::array<Land, 2>& get() {
+			static std::array<Land, 2> instance;
+			return instance;
+		}
+
+		CCPoint gravity = CCPoint(0, 0); // y axis gravity
+		float angle = 0.f;
+	};
+
 	class Extra {
 	public:
 		static std::array<Extra, 2>& get() {
@@ -68,10 +79,12 @@ extern std::array<Particle, 2>& particle;
 extern std::array<Particle::Drag, 2>& drag;
 extern std::array<Particle::Trail, 2>& trail;
 extern std::array<Particle::ShipClick, 2>& shipClick;
+extern std::array<Particle::Land, 2>& land;
 extern std::array<Particle::Extra, 2>& extra;
 extern CCPoint sourceAngle;
 extern CCPoint sourceGravity;
+extern CCPoint landGravity;
+extern float landAngle;
 extern CCPoint sourceStartSize;
 extern CCPoint sourceSpeed;
 extern CCPoint sourcePosVar;
-extern std::array<int, 2> angleTweak;

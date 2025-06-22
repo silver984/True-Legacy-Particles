@@ -15,7 +15,7 @@ A very faithful recreation of the old particle system for the player vehicle.
 ### Player land particle setting(s)
 
 - **No Rotation** `bool` - Disables rotation for the land particles, just like before version 2.2. `default = true`
-- **Always Spawn** - Always make sure to spawn when player lands. `default = true`
+- **Always Spawn** - Always make sure to spawn when player lands, just like before version 2.2. `default = true`
 
 ### Dash particle setting(s)
 

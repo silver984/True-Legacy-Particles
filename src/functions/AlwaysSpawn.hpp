@@ -1,5 +1,7 @@
 #pragma once
 
+using namespace geode::prelude;
+
 extern void alwaysSpawnFunc(PlayerObject* player);
 extern std::array<bool, 2> grounded;
 extern std::array<bool, 2> gate;

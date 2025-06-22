@@ -35,35 +35,44 @@ class $modify(PlayerObject) {
 		}
 
 		for (int i = 0; i < 2; i++) {
-			CCDictionary* dict =
+			CCDictionary* dragDict =
 				CCDictionary::createWithContentsOfFile("dragEffect.plist");
 
+			CCDictionary* landDict =
+				CCDictionary::createWithContentsOfFile("landEffect.plist");
+
 			sourceGravity = CCPoint(
-				((CCString*)dict->objectForKey("gravityx"))->floatValue(),
-				((CCString*)dict->objectForKey("gravityy"))->floatValue()
+				((CCString*)dragDict->objectForKey("gravityx"))->floatValue(),
+				((CCString*)dragDict->objectForKey("gravityy"))->floatValue()
 			);
+
+			landGravity = CCPoint(
+				((CCString*)landDict->objectForKey("gravityx"))->floatValue(),
+				((CCString*)landDict->objectForKey("gravityy"))->floatValue()
+			);
+			landAngle = ((CCString*)landDict->objectForKey("angle"))->floatValue();
 
 			// y for variance
 			sourceAngle = CCPoint(
-				((CCString*)dict->objectForKey("angle"))->floatValue(),
-				((CCString*)dict->objectForKey("angleVariance"))->floatValue()
+				((CCString*)dragDict->objectForKey("angle"))->floatValue(),
+				((CCString*)dragDict->objectForKey("angleVariance"))->floatValue()
 			);
 
 			// y for variance
 			sourceStartSize = CCPoint(
-				((CCString*)dict->objectForKey("startParticleSize"))->floatValue(),
-				((CCString*)dict->objectForKey("startParticleSizeVariance"))->floatValue()
+				((CCString*)dragDict->objectForKey("startParticleSize"))->floatValue(),
+				((CCString*)dragDict->objectForKey("startParticleSizeVariance"))->floatValue()
 			);
 
 			// y for variance
 			sourceSpeed = CCPoint(
-				((CCString*)dict->objectForKey("speed"))->floatValue(),
-				((CCString*)dict->objectForKey("speedVariance"))->floatValue()
+				((CCString*)dragDict->objectForKey("speed"))->floatValue(),
+				((CCString*)dragDict->objectForKey("speedVariance"))->floatValue()
 			);
 
 			sourcePosVar = CCPoint(
-				((CCString*)dict->objectForKey("sourcePositionVariancex"))->floatValue(),
-				((CCString*)dict->objectForKey("sourcePositionVariancey"))->floatValue()
+				((CCString*)dragDict->objectForKey("sourcePositionVariancex"))->floatValue(),
+				((CCString*)dragDict->objectForKey("sourcePositionVariancey"))->floatValue()
 			);
 
 			drag[i].posVar = sourcePosVar;
@@ -82,12 +91,10 @@ class $modify(PlayerObject) {
 			shipClick[i].startSize = sourceStartSize.x * 1.5;
 			shipClick[i].startSizeVar = sourceStartSize.y * 1.5;
 
-			angleTweak[i] = 0;
 			grounded[i] = 0;
 			gate[i] = 0;
 			landSwitch[i] = 0;
 		}
-
 
 		return true;
 	}
@@ -125,7 +132,9 @@ class $modify(PlayerObject) {
 	}
 
 	void hitGround(GameObject* p0, bool p1) {
-		grounded[index(this)] = true;
+		if (!p1)
+			grounded[index(this)] = true;
+
 		PlayerObject::hitGround(p0, p1);
 	}
 
@@ -135,6 +144,12 @@ class $modify(PlayerObject) {
 
 		core(this);
 
+		if (noRotation) {
+			int angle = this->m_isSideways ? -90 : 0;
+			m_landParticles0->setRotation(angle);
+			m_landParticles1->setRotation(angle);
+		}
+
 		PlayerObject::update(delta);
 
 		grounded[index(this)] = false;
@@ -143,19 +158,5 @@ class $modify(PlayerObject) {
 			m_dashParticles->setPositionX(this->getPositionX());
 		if (centerDashY)
 			m_dashParticles->setPositionY(this->getPositionY());
-
-		if (noRotation) {
-			auto snapToNearest90 = [](float angle) -> float {
-				return angle > 0 ? floor(angle / 90.f) * 90.f :
-					angle < 0 ? ceil(angle / 90.f) * 90.f : 0.f;
-				};
-
-			m_landParticles0->setRotation(snapToNearest90(m_landParticles0->getRotation()));
-			m_landParticles1->setRotation(snapToNearest90(m_landParticles1->getRotation()));
-		}
-
-		float avgRotation = (m_landParticles0->getRotation() + m_landParticles1->getRotation()) / 2.f;
-		angleTweak[index(this)] = avgRotation > 0 ? floor(avgRotation / 90.f) * 90.f :
-			avgRotation < 0 ? ceil(avgRotation / 90.f) * 90.f : 0.f;
 	}
 };
