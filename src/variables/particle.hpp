@@ -10,7 +10,8 @@ public:
 		static std::array<Particle, 2> instance;
 		return instance;
 	}
-
+	
+	bool isGrounded = false;
 	bool spiderDashed = false;
 
 	class Drag {

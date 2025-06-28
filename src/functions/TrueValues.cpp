@@ -29,23 +29,25 @@ void trueVals(PlayerObject* player) {
 	auto trailParticles = player->m_trailingParticles;
 	auto shipParticles = player->m_shipClickParticles;
 	
+	int i = index(player);
+
 	if (!player->m_isSideways) {
-		groundParticles->setPosVar(drag[index(player)].posVar * size);
-		trailParticles->setPosVar(trail[index(player)].posVar * size);
-		shipParticles->setPosVar(shipClick[index(player)].posVar * size);
+		groundParticles->setPosVar(drag[i].posVar * size);
+		trailParticles->setPosVar(trail[i].posVar * size);
+		shipParticles->setPosVar(shipClick[i].posVar * size);
 	}
 	else {
 		CCPoint dragPosVar = CCPoint(
-			drag[index(player)].posVar.y * size,
-			drag[index(player)].posVar.x * size
+			drag[i].posVar.y * size,
+			drag[i].posVar.x * size
 		);
 		CCPoint trailPosVar = CCPoint(
-			trail[index(player)].posVar.y * size,
-			trail[index(player)].posVar.x * size
+			trail[i].posVar.y * size,
+			trail[i].posVar.x * size
 		);
 		CCPoint shipPosVar = CCPoint(
-			shipClick[index(player)].posVar.y * size,
-			shipClick[index(player)].posVar.x * size
+			shipClick[i].posVar.y * size,
+			shipClick[i].posVar.x * size
 		);
 
 		groundParticles->setPosVar(dragPosVar);
@@ -57,16 +59,16 @@ void trueVals(PlayerObject* player) {
 	groundParticles->setAngleVar(angleVar);
 	groundParticles->setGravity(gravity);
 
-	trailParticles->setSpeed(trail[index(player)].speed * size);
-	trailParticles->setSpeedVar(trail[index(player)].speedVar * size);
+	trailParticles->setSpeed(trail[i].speed * size);
+	trailParticles->setSpeedVar(trail[i].speedVar * size);
 	trailParticles->setAngle(angle);
 	trailParticles->setAngleVar(angleVar);
 	trailParticles->setGravity(gravity);
 
-	shipParticles->setSpeed(shipClick[index(player)].speed * size);
-	shipParticles->setSpeedVar(shipClick[index(player)].speedVar * size);
-	shipParticles->setStartSize(shipClick[index(player)].startSize * size);
-	shipParticles->setStartSizeVar(shipClick[index(player)].startSizeVar * size);
+	shipParticles->setSpeed(shipClick[i].speed * size);
+	shipParticles->setSpeedVar(shipClick[i].speedVar * size);
+	shipParticles->setStartSize(shipClick[i].startSize * size);
+	shipParticles->setStartSizeVar(shipClick[i].startSizeVar * size);
 	shipParticles->setAngle(angle);
 	shipParticles->setAngleVar(angleVar);
 	shipParticles->setGravity(gravity);

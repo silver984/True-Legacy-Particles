@@ -12,14 +12,14 @@ void tracking(PlayerObject* player) {
 
 	int i = index(player);
 
-	if (player->m_isOnGround) {
+	if (particle[i].isGrounded) {
 		extra[i].onGroundPos = player->m_playerGroundParticles->getPosition();
 		CCPoint air = extra[i].onGroundPos - player->getPosition();
 		extra[i].offGroundPos = air;
 	}
 
 	if (particle[i].spiderDashed) {
-		if (player->m_isOnGround)
+		if (particle[i].isGrounded)
 			particle[i].spiderDashed = false;
 	}
 

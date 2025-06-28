@@ -7,7 +7,6 @@
 
 using namespace geode::prelude;
 
-std::array<bool, 2> grounded = { false, false };
 std::array<bool, 2> gate = { false, false };
 std::array<int, 2> landSwitch = { 0, 0 };
 std::array<bool, 2> hadReset0 = { 0, 0 };
@@ -20,56 +19,57 @@ void alwaysSpawnFunc(PlayerObject* player) {
 	int upsideDown = player->m_isUpsideDown ? -1 : 1;
 	int sideways = player->m_isSideways ? -1 : 1;
 	int goingLeft = player->m_isGoingLeft ? -1 : 1;
-	land[index(player)].gravity = CCPoint(landGravity.x * (goingLeft * sideways), landGravity.y * (upsideDown * sideways));
-	land[index(player)].angle = landAngle * (upsideDown * sideways);
+	int i = index(player);
+
+	land[i].gravity = CCPoint(landGravity.x * (goingLeft * sideways), landGravity.y * (upsideDown * sideways));
+	land[i].angle = landAngle * (upsideDown * sideways);
 
 	if (!player->isVisible())
 		return;
 
-	if (grounded[index(player)]) {
-		if (!gate[index(player)]) {
-			landSwitch[index(player)]++;
+	if (particle[i].isGrounded) {
+		if (!gate[i]) {
+			landSwitch[i]++;
 
-			float deviateX;
+			CCPoint deviate;
 			if (player->m_isSideways) {
 				if (!player->m_isUpsideDown)
-					deviateX = -(player->m_height / 2) * player->m_vehicleSize;
+					deviate.x = -(player->m_height / 2) * player->m_vehicleSize;
 				else
-					deviateX = (player->m_height / 2) * player->m_vehicleSize;
+					deviate.x = (player->m_height / 2) * player->m_vehicleSize;
 			}
 			else
-				deviateX = 0;
+				deviate.x = 0;
 
-			float deviateY;
 			if (!player->m_isSideways) {
 				if (player->m_isUpsideDown)
-					deviateY = (player->m_height / 2) * player->m_vehicleSize;
+					deviate.y = (player->m_height / 2) * player->m_vehicleSize;
 				else
-					deviateY = -(player->m_height / 2) * player->m_vehicleSize;
+					deviate.y = -(player->m_height / 2) * player->m_vehicleSize;
 			}
 			else
-				deviateY = 0;
+				deviate.y = 0;
+			
+			CCPoint pos = CCPoint(player->getPosition().x + deviate.x, player->getPosition().y + deviate.y);
 
-			CCPoint pos = CCPoint(player->getPosition().x + deviateX, player->getPosition().y + deviateY);
-
-			if (landSwitch[index(player)] % 2 == 0) {
+			if (landSwitch[i] % 2 == 0) {
 				player->m_useLandParticles0 = false;
-				player->m_landParticles0->setGravity(land[index(player)].gravity);
-				player->m_landParticles0->setAngle(land[index(player)].angle);
+				player->m_landParticles0->setGravity(land[i].gravity);
+				player->m_landParticles0->setAngle(land[i].angle);
 				player->m_landParticles0->setPosition(pos);
 				player->m_landParticles0->resetSystem();
 			}
 			else {
 				player->m_useLandParticles0 = true;
-				player->m_landParticles1->setGravity(land[index(player)].gravity);
-				player->m_landParticles1->setAngle(land[index(player)].angle);
+				player->m_landParticles1->setGravity(land[i].gravity);
+				player->m_landParticles1->setAngle(land[i].angle);
 				player->m_landParticles1->setPosition(pos);
 				player->m_landParticles1->resetSystem();
 			}
 
-			gate[index(player)] = true;
+			gate[i] = true;
 		}
 	}
 	else
-		gate[index(player)] = false;
+		gate[i] = false;
 }

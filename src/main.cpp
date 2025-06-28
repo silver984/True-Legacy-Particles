@@ -1,5 +1,6 @@
 #include <Geode/Geode.hpp>
 #include <Geode/modify/PlayerObject.hpp>
+#include <Geode/modify/PlayLayer.hpp>
 #include <Geode/modify/GJBaseGameLayer.hpp>
 #include "functions/Core.hpp"
 #include "functions/AlwaysSpawn.hpp"
@@ -10,9 +11,52 @@
 
 using namespace geode::prelude;
 
+class $modify(PlayLayer) {
+	void startGame() {
+		if (!toggle)
+			return PlayLayer::startGame();
+
+		if (Loader::get()->isModLoaded("thesillydoggo.qolmod")) {
+			auto winSize = CCDirector::get()->getWinSize();
+			float fadeInTime = 0.25f;
+			float uptime = 2.5f;
+	
+			auto gradient = CCLayerGradient::create(
+				ccc4(0, 0, 0, 0),
+				ccc4(0, 0, 0, 191)
+			);
+			gradient->setContentSize(CCSize(winSize.width, winSize.height / 4));
+			gradient->setAnchorPoint(CCPoint(0, 0));
+			gradient->setPosition(CCPoint(0, 0));
+			gradient->setOpacity(0.f);
+			PlayLayer::addChild(gradient, 9998);
+			gradient->runAction(CCSequence::create(
+				CCFadeIn::create(fadeInTime),
+				CCDelayTime::create(uptime),
+				CCFadeOut::create(fadeInTime),
+				nullptr
+			));
+			
+			auto label = CCLabelBMFont::create("True Legacy Particles is incompatible with QOLMod.", "bigFont.fnt");
+			label->setScale(1.f / 4);
+			label->setPosition(CCSize(winSize.width / 2, winSize.height / 10));
+			label->setOpacity(0.f);
+			PlayLayer::addChild(label, 9999);
+			label->runAction(CCSequence::create(
+				CCFadeIn::create(fadeInTime),
+				CCDelayTime::create(uptime),
+				CCFadeOut::create(fadeInTime),
+				nullptr
+			));
+		}
+
+		PlayLayer::startGame();
+	}
+};
+
 class $modify(PlayerObject) {
-	bool init(int p0, int p1, GJBaseGameLayer * p2, cocos2d::CCLayer * p3, bool p4) {
-		if (!PlayerObject::init(p0, p1, p2, p3, p4))
+	bool init(int player, int ship, GJBaseGameLayer* gameLayer, cocos2d::CCLayer* layer, bool playLayer) {
+		if (!PlayerObject::init(player, ship, gameLayer, layer, playLayer))
 			return false;
 
 		toggle = Mod::get()->getSettingValue<bool>("switch");
@@ -91,7 +135,7 @@ class $modify(PlayerObject) {
 			shipClick[i].startSize = sourceStartSize.x * 1.5;
 			shipClick[i].startSizeVar = sourceStartSize.y * 1.5;
 
-			grounded[i] = 0;
+			particle[i].isGrounded = false;
 			gate[i] = 0;
 			landSwitch[i] = 0;
 		}
@@ -104,10 +148,11 @@ class $modify(PlayerObject) {
 		m_landParticles1->setRotation(0);
 
 		for (int i = 0; i < 2; i++) {
-			grounded[i] = 0;
+			particle[i].isGrounded = false;
 			gate[i] = 0;
 			landSwitch[i] = 0;
 		}
+
 		PlayerObject::resetObject();
 	}
 
@@ -133,14 +178,14 @@ class $modify(PlayerObject) {
 
 	void hitGround(GameObject* p0, bool p1) {
 		if (!p1)
-			grounded[index(this)] = true;
+			particle[index(this)].isGrounded = true;
 
 		PlayerObject::hitGround(p0, p1);
 	}
 
-	virtual void update(float delta) {
+	virtual void update(float p0) {
 		if (!check(this, true))
-			return PlayerObject::update(delta);
+			return PlayerObject::update(p0);
 
 		core(this);
 
@@ -150,9 +195,9 @@ class $modify(PlayerObject) {
 			m_landParticles1->setRotation(angle);
 		}
 
-		PlayerObject::update(delta);
+		PlayerObject::update(p0);
 
-		grounded[index(this)] = false;
+		particle[index(this)].isGrounded = false;
 
 		if (centerDashX)
 			m_dashParticles->setPositionX(this->getPositionX());

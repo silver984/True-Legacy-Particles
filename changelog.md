@@ -1,5 +1,9 @@
 # True Legacy Particles
 
+## 1.4.2
+- Updated to Geode 4.6.1
+- Detect if QOLMod is enabled
+
 ## 1.4.1
 - Better logic for Always Spawn
 - Changed the description of Always Spawn

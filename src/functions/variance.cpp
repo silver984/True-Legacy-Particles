@@ -1,8 +1,11 @@
+#include <Geode/Geode.hpp>
 #include <Geode/modify/PlayerObject.hpp>
 #include "variance.hpp"
 #include "util.hpp"
 #include "../variables/settings.hpp"
 #include "../variables/particle.hpp"
+
+using namespace geode::prelude;
 
 void scale(PlayerObject* player, bool isMode) {
 	if (!isTrueVals || !isMode || legacyScaling)

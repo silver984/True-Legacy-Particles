@@ -2,8 +2,6 @@
 
 A very faithful recreation of the old particle system for the player vehicle.
 
-> This mod utilizes a .plist file called "dragEffect" in the game files. If ever the file gets modified (either through another mod called Texture Loader or by simply changing the game resources) whilst in-game, make sure to restart your game.
-
 ## Configuration
 
 ### Player particle system setting(s)
@@ -29,5 +27,4 @@ A very faithful recreation of the old particle system for the player vehicle.
 
 ## Credits
 
-- Developed by [SILVERSTAR](https://github.com/silver984) -> [Ko-fi](https://ko-fi.com/silverstar_)
-- Built using the [Geode SDK](https://geode-sdk.org/) v4.4.0
+- Developed by [SILVERSTAR](https://github.com/silver984) : [Ko-fi](https://ko-fi.com/silverstar_)
