@@ -8,7 +8,7 @@
 	},
 	"id": "silverstar.legacy-particles",
 	"name": "True Legacy Particles",
-	"version": "v1.4.2",
+	"version": "v1.4.3",
 	"developer": "SILVERSTAR",
 	"description": "",
 	"links": {
@@ -24,6 +24,11 @@
 			"name": "Turn TLP ON",
 			"type": "bool",
 			"default": true
+		},
+		"warning": {
+			"name": "Disable Mod Instability Warning",
+			"type": "bool",
+			"default": false
 		},
 		"ground-particles": {
 			"type": "title",

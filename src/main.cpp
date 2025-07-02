@@ -11,44 +11,111 @@
 
 using namespace geode::prelude;
 
+bool warningPassed = false;
+
 class $modify(PlayLayer) {
 	void startGame() {
 		if (!toggle)
 			return PlayLayer::startGame();
 
-		if (Loader::get()->isModLoaded("thesillydoggo.qolmod")) {
+#ifdef GEODE_IS_WINDOWS
+		bool isQOLLoaded = Loader::get()->isModLoaded("thesillydoggo.qolmod");
+		bool showWarning = Mod::get()->getSettingValue<bool>("warning");
+
+		if (isQOLLoaded && !showWarning && !warningPassed) {
 			auto winSize = CCDirector::get()->getWinSize();
 			float fadeInTime = 0.25f;
-			float uptime = 2.5f;
-	
-			auto gradient = CCLayerGradient::create(
-				ccc4(0, 0, 0, 0),
-				ccc4(0, 0, 0, 191)
-			);
-			gradient->setContentSize(CCSize(winSize.width, winSize.height / 4));
-			gradient->setAnchorPoint(CCPoint(0, 0));
-			gradient->setPosition(CCPoint(0, 0));
-			gradient->setOpacity(0.f);
-			PlayLayer::addChild(gradient, 9998);
-			gradient->runAction(CCSequence::create(
-				CCFadeIn::create(fadeInTime),
+			float uptime = 3.f;
+
+			// Reusable fade sequence generator
+			auto makeFadeSequence = [=]() {
+				return CCSequence::create(
+					CCFadeIn::create(fadeInTime),
+					CCDelayTime::create(uptime),
+					CCFadeOut::create(fadeInTime),
+					nullptr
+				);
+				};
+
+			// gradient background
+			auto gradient = CCLayerGradient::create(ccc4(0, 0, 0, 0), ccc4(0, 0, 0, 128));
+			gradient->setContentSize({ winSize.width, winSize.height / 4 });
+			gradient->setAnchorPoint({ 0, 0 });
+			gradient->setPosition({ 0, 0 });
+			gradient->setID("tlp-shadow-gradient");
+			this->addChild(gradient, 9998);
+			gradient->runAction(makeFadeSequence());
+
+			// logo
+			auto logo = CCSprite::create("logo.png"_spr);
+			logo->setPosition({ 30, 30 });
+			logo->setScale(0.4f);
+			logo->setID("tlp-logo");
+			this->addChild(logo, 9999);
+			logo->runAction(makeFadeSequence());
+
+			// "True Legacy Particles" text
+			std::string modName = Mod::get()->getName();
+			auto text = CCLabelBMFont::create(modName.c_str(), "bigFont.fnt");
+			text->setScale(0.3f);
+			text->setAnchorPoint({ 0, 1 });
+
+			CCPoint textPos{
+				logo->getPositionX() + (logo->getContentWidth() * logo->getScale()) / 2 + 5,
+				logo->getPositionY() + (logo->getContentHeight() * logo->getScale()) / 2 - 5
+			};
+			text->setPosition(textPos);
+			text->setID("tlp-text");
+			this->addChild(text, 9999);
+			text->runAction(makeFadeSequence());
+
+			// exclamation mark
+			auto exclamation = CCLabelBMFont::create("!", "bigFont.fnt");
+			exclamation->setScale(0.25f);
+			exclamation->setAnchorPoint({ 0, 1 });
+
+			CCPoint excPos{
+				text->getPositionX(),
+				text->getPositionY() - (text->getContentHeight() * text->getScale()) - 5
+			};
+			exclamation->setPosition(excPos);
+			exclamation->setColor({ 255, 0, 0 });
+			exclamation->setID("tlp-exclamation");
+			this->addChild(exclamation, 9999);
+			exclamation->runAction(makeFadeSequence());
+
+			// compatibility warning
+			std::string incompatibleModName = Loader::get()->getInstalledMod("thesillydoggo.qolmod")->getName();
+			auto warning = CCLabelBMFont::create(fmt::format("May not work with {}", incompatibleModName).c_str(), "bigFont.fnt");
+			warning->setScale(0.25f);
+			warning->setAnchorPoint({ 0, 1 });
+
+			CCPoint warningPos{
+				exclamation->getPositionX() + exclamation->getContentHeight() * exclamation->getScale(),
+				exclamation->getPositionY()
+			};
+			warning->setPosition(warningPos);
+			warning->setID("tlp-warning");
+			this->addChild(warning, 9999);
+			warning->runAction(makeFadeSequence());
+
+			// bottom hint
+			auto bottomText = CCLabelBMFont::create("DISABLE THIS WARNING IN MOD SETTINGS", "bigFont.fnt");
+			bottomText->setScale(0.15f);
+			bottomText->setPosition({ winSize.width / 2, 6 });
+			bottomText->setOpacity(0);
+			bottomText->setID("tlp-bottom-text");
+			this->addChild(bottomText, 9999);
+			bottomText->runAction(CCSequence::create(
+				CCFadeTo::create(fadeInTime, 128),
 				CCDelayTime::create(uptime),
-				CCFadeOut::create(fadeInTime),
+				CCFadeTo::create(fadeInTime, 0),
 				nullptr
 			));
-			
-			auto label = CCLabelBMFont::create("True Legacy Particles is incompatible with QOLMod.", "bigFont.fnt");
-			label->setScale(1.f / 4);
-			label->setPosition(CCSize(winSize.width / 2, winSize.height / 10));
-			label->setOpacity(0.f);
-			PlayLayer::addChild(label, 9999);
-			label->runAction(CCSequence::create(
-				CCFadeIn::create(fadeInTime),
-				CCDelayTime::create(uptime),
-				CCFadeOut::create(fadeInTime),
-				nullptr
-			));
+
+			warningPassed = true;
 		}
+#endif
 
 		PlayLayer::startGame();
 	}

@@ -3,7 +3,7 @@
 A very faithful recreation of the old particle system for the player vehicle.
 
 #### Read:
-This mod is <cr>incompatible</c> with QOLMod for unknown reasons.
+This mod is <cr>incompatible</c> with QOLMod on <cb>Windows</c> (the only operating software with incompatibility issues as far as I know) for unknown reasons.
 
 This mod utilizes a <cg>.plist</c> file called "dragEffect" in the game files.
 

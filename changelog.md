@@ -1,5 +1,8 @@
 # True Legacy Particles
 
+## 1.4.3
+- Detect if QOLMOd is enabled only on Windows
+
 ## 1.4.2
 - Updated to Geode 4.6.1
 - Detect if QOLMod is enabled
