@@ -13,8 +13,8 @@ project(truelegacyparticles VERSION 1.0.0)
 # Set up the mod binary
 add_library(${PROJECT_NAME} SHARED
     src/main.cpp
-    "src/variables/particle.cpp"
-  "src/functions/LegacyTracking.cpp" "src/variables/settings.cpp" "src/functions/Core.cpp"  "src/functions/util.cpp" "src/functions/TrueValues.cpp" "src/functions/LegacyScaling.cpp" "src/functions/variance.cpp" "src/functions/AlwaysSpawn.cpp")
+    "src/globals/particle.cpp"
+  "src/functions/legacy_tracking.cpp" "src/globals/settings.cpp" "src/util.cpp" "src/functions/true_values.cpp" "src/functions/legacy_scaling.cpp" "src/functions/variance.cpp" "src/functions/always_spawn.cpp"  "src/plist.cpp" "src/functions/center_dash_particles.cpp" "src/globals/state_handler.cpp")
 
 if (NOT DEFINED ENV{GEODE_SDK})
     message(FATAL_ERROR "Unable to find Geode SDK! Please define GEODE_SDK environment variable to point to Geode")

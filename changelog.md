@@ -1,5 +1,9 @@
 # True Legacy Particles
 
+## 1.4.4
+- Better logic for Legacy Tracking
+- Better logic for True Values
+
 ## 1.4.3
 - Detect if QOLMOd is enabled only on Windows
 

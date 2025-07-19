@@ -1,6 +1,5 @@
 #pragma once
 
-#include <Geode/modify/PlayerObject.hpp>
 #include <array>
 using namespace geode::prelude;
 
@@ -12,6 +11,7 @@ public:
 	}
 	
 	bool isGrounded = false;
+	bool isDeviated = false;
 	bool spiderDashed = false;
 
 	class Drag {
@@ -62,6 +62,8 @@ public:
 
 		CCPoint gravity = CCPoint(0, 0); // y axis gravity
 		float angle = 0.f;
+		bool gate = false;
+		int landSwitch = 0;
 	};
 
 	class Extra {
@@ -76,16 +78,16 @@ public:
 	};
 };
 
-extern std::array<Particle, 2>& particle;
-extern std::array<Particle::Drag, 2>& drag;
-extern std::array<Particle::Trail, 2>& trail;
-extern std::array<Particle::ShipClick, 2>& shipClick;
-extern std::array<Particle::Land, 2>& land;
-extern std::array<Particle::Extra, 2>& extra;
-extern CCPoint sourceAngle;
-extern CCPoint sourceGravity;
-extern CCPoint landGravity;
-extern float landAngle;
-extern CCPoint sourceStartSize;
-extern CCPoint sourceSpeed;
-extern CCPoint sourcePosVar;
+extern std::array<Particle, 2>& g_particle;
+extern std::array<Particle::Drag, 2>& g_drag;
+extern std::array<Particle::Trail, 2>& g_trail;
+extern std::array<Particle::ShipClick, 2>& g_shipClick;
+extern std::array<Particle::Land, 2>& g_land;
+extern std::array<Particle::Extra, 2>& g_extra;
+extern CCPoint g_sourceAngle;
+extern CCPoint g_sourceGravity;
+extern CCPoint g_landGravity;
+extern float g_landAngle;
+extern CCPoint g_sourceStartSize;
+extern CCPoint g_sourceSpeed;
+extern CCPoint g_sourcePosVar;

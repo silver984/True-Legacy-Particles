@@ -1,5 +1,5 @@
 {
-	"geode": "4.6.1",
+	"geode": "4.6.3",
 	"gd": {
 		"win": "2.2074",
 		"android": "2.2074",
@@ -8,9 +8,15 @@
 	},
 	"id": "silverstar.legacy-particles",
 	"name": "True Legacy Particles",
-	"version": "v1.4.3",
+	"version": "v1.4.4",
 	"developer": "SILVERSTAR",
 	"description": "",
+	"incompatibilities": {
+		"thesillydoggo.qolmod": {
+			"importance": "breaking",
+			"version": ">=1.7.5"
+		}
+	},
 	"links": {
 		"source": "https://github.com/silver984/True-Legacy-Particles"
 	},
