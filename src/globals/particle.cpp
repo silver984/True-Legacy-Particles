@@ -12,5 +12,6 @@ CCPoint g_sourceGravity = CCPoint(0, 0);
 CCPoint g_landGravity = CCPoint(0, 0);
 float g_landAngle = 0.f;
 CCPoint g_sourceStartSize = CCPoint(0, 0);
+CCPoint g_sourceEndSize = CCPoint(0, 0);
 CCPoint g_sourceSpeed = CCPoint(0, 0);
 CCPoint g_sourcePosVar = CCPoint(0, 0);

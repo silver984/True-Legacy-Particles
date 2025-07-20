@@ -8,7 +8,7 @@
 	},
 	"id": "silverstar.legacy-particles",
 	"name": "True Legacy Particles",
-	"version": "v1.4.4",
+	"version": "v1.4.5",
 	"developer": "SILVERSTAR",
 	"description": "",
 	"incompatibilities": {
@@ -30,11 +30,6 @@
 			"name": "Turn TLP ON",
 			"type": "bool",
 			"default": true
-		},
-		"warning": {
-			"name": "Disable Mod Instability Warning",
-			"type": "bool",
-			"default": false
 		},
 		"ground-particles": {
 			"type": "title",
@@ -93,7 +88,7 @@
 			"type": "bool",
 			"description": "Center the x axis.",
 			"enable-if": "center-dash && switch",
-			"default": true
+			"default": false
 		},
 		"center-dash-y": {
 			"name": "y axis",

@@ -4,13 +4,13 @@
 #include "util.hpp"
 
 class $modify(PlayerObject) {
-	virtual void resetObject() {
+	void resetObject() override {
 		m_landParticles0->setRotation(0);
 		m_landParticles1->setRotation(0);
 		PlayerObject::resetObject();
 	}
 
-	virtual void update(float p0) {
+	void update(float p0) override {
 		if (!isValid(this, true)) return PlayerObject::update(p0);
 		PlayerObject::update(p0);
 

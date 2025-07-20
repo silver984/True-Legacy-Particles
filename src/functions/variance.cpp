@@ -19,6 +19,8 @@ void scale(PlayerObject* player, bool isMode) {
 	g_shipClick[i].speedVar = g_sourceSpeed.y;
 	g_shipClick[i].startSize = g_sourceStartSize.x;
 	g_shipClick[i].startSizeVar = g_sourceStartSize.y;
+	g_shipClick[i].endSize = g_sourceEndSize.x;
+	g_shipClick[i].endSizeVar = g_sourceEndSize.y;
 }
 
 void wide(PlayerObject* player, bool isMode) {

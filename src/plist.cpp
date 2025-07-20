@@ -38,6 +38,12 @@ class $modify(PlayerObject) {
 		);
 
 		// y for variance
+		g_sourceEndSize = CCPoint(
+			((CCString*)dragDict->objectForKey("finishParticleSize"))->floatValue(),
+			((CCString*)dragDict->objectForKey("finishParticleSizeVariance"))->floatValue()
+		);
+
+		// y for variance
 		g_sourceSpeed = CCPoint(
 			((CCString*)dragDict->objectForKey("speed"))->floatValue(),
 			((CCString*)dragDict->objectForKey("speedVariance"))->floatValue()
@@ -54,21 +60,40 @@ class $modify(PlayerObject) {
 			g_drag[i].speedVar = g_sourceSpeed.y;
 			g_drag[i].startSize = g_sourceStartSize.x;
 			g_drag[i].startSizeVar = g_sourceStartSize.y;
+			g_drag[i].endSize = g_sourceEndSize.x;
+			g_drag[i].endSizeVar = g_sourceEndSize.y;
 
 			g_trail[i].posVar = CCPoint(0, g_sourcePosVar.y * 0.4);
 			g_trail[i].speed = g_sourceSpeed.x * 0.2;
 			g_trail[i].speedVar = g_sourceSpeed.y * 0.2;
+			g_trail[i].startSize = g_sourceStartSize.x;
+			g_trail[i].startSizeVar = g_sourceStartSize.y;
+			g_trail[i].endSize = g_sourceEndSize.x;
+			g_trail[i].endSizeVar = g_sourceEndSize.y;
 
 			g_shipClick[i].posVar = CCPoint(0, g_sourcePosVar.y * 0.4);
 			g_shipClick[i].speed = g_sourceSpeed.x * 2;
 			g_shipClick[i].speedVar = g_sourceSpeed.y * 2;
 			g_shipClick[i].startSize = g_sourceStartSize.x * 1.5;
 			g_shipClick[i].startSizeVar = g_sourceStartSize.y * 1.5;
+			g_shipClick[i].endSize = g_sourceEndSize.x * 1.5;
+			g_shipClick[i].endSizeVar = g_sourceEndSize.y * 1.5;
 
 			g_particle[i].isGrounded = false;
 			g_particle[i].isDeviated = false;
 			g_land[i].gate = false;
 			g_land[i].landSwitch = 0;
+		}
+
+		bool condition =
+			this->m_playerGroundParticles &&
+			this->m_trailingParticles &&
+			this->m_shipClickParticles;
+
+		if (condition) {
+			this->m_playerGroundParticles->setID("ground-particles");
+			this->m_trailingParticles->setID("trailing-particles");
+			this->m_shipClickParticles->setID("ship-click-particles");
 		}
 
 		return true;

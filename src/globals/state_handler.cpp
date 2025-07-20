@@ -23,7 +23,7 @@ class $modify(PlayerObject) {
 		return true;
 	}
 
-	virtual void resetObject() {
+	void resetObject() override {
 		int i = playerIndex(this);
 		g_particle[i].isGrounded = false;
 		g_land[i].gate = false;
@@ -57,7 +57,7 @@ class $modify(PlayerObject) {
 		PlayerObject::hitGround(p0, hitCeiling);
 	}
 
-	virtual void update(float p0) {
+	void update(float p0) override {
 		PlayerObject::update(p0);
 		g_particle[playerIndex(this)].isGrounded = false;
 	}

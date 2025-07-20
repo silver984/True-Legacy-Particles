@@ -6,7 +6,7 @@
 using namespace geode::prelude;
 
 class $modify(PlayerObject) {
-	virtual void update(float p0) {
+	void update(float p0) override {
 		if (!isValid(this, true) || !g_isAlwaysSpawn) return PlayerObject::update(p0);
 
 		int upsideDown = this->m_isUpsideDown ? -1 : 1;

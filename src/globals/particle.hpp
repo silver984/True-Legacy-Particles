@@ -24,6 +24,8 @@ public:
 		float speedVar = 0.f;
 		float startSize = 0.f;
 		float startSizeVar = 0.f;
+		float endSize = 0.f;
+		float endSizeVar = 0.f;
 		CCPoint posVar = CCPoint(0, 0);
 	};
 
@@ -37,6 +39,10 @@ public:
 		CCPoint posVar = CCPoint(0, 0);
 		float speed = 0.f;
 		float speedVar = 0.f;
+		float startSize = 0.f;
+		float startSizeVar = 0.f;
+		float endSize = 0.f;
+		float endSizeVar = 0.f;
 	};
 
 	class ShipClick {
@@ -51,6 +57,8 @@ public:
 		float speedVar = 0.f;
 		float startSize = 0.f;
 		float startSizeVar = 0.f;
+		float endSize = 0.f;
+		float endSizeVar = 0.f;
 	};
 
 	class Land {
@@ -89,5 +97,6 @@ extern CCPoint g_sourceGravity;
 extern CCPoint g_landGravity;
 extern float g_landAngle;
 extern CCPoint g_sourceStartSize;
+extern CCPoint g_sourceEndSize;
 extern CCPoint g_sourceSpeed;
 extern CCPoint g_sourcePosVar;

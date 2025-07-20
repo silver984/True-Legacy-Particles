@@ -10,11 +10,13 @@ set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 
 project(truelegacyparticles VERSION 1.0.0)
 
-# Set up the mod binary
-add_library(${PROJECT_NAME} SHARED
-    src/main.cpp
-    "src/globals/particle.cpp"
-  "src/functions/legacy_tracking.cpp" "src/globals/settings.cpp" "src/util.cpp" "src/functions/true_values.cpp" "src/functions/legacy_scaling.cpp" "src/functions/variance.cpp" "src/functions/always_spawn.cpp"  "src/plist.cpp" "src/functions/center_dash_particles.cpp" "src/globals/state_handler.cpp")
+file(GLOB_RECURSE SOURCES
+	src/*.cpp
+    functions/*.cpp
+    globals/*.cpp
+)
+
+add_library(${PROJECT_NAME} SHARED ${SOURCES})
 
 if (NOT DEFINED ENV{GEODE_SDK})
     message(FATAL_ERROR "Unable to find Geode SDK! Please define GEODE_SDK environment variable to point to Geode")
@@ -24,5 +26,4 @@ endif()
 
 add_subdirectory($ENV{GEODE_SDK} ${CMAKE_CURRENT_BINARY_DIR}/geode)
 
-# Set up dependencies, resources, and link Geode.
 setup_geode_mod(${PROJECT_NAME})

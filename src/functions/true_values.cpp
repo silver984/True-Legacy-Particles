@@ -6,7 +6,7 @@
 using namespace geode::prelude;
 
 class $modify(PlayerObject) {
-	virtual void update(float p0) {
+	void update(float p0) override {
 		if (!isValid(this, true) || !g_isTrueValues) return PlayerObject::update(p0);
 		PlayerObject::update(p0);
 
@@ -65,18 +65,34 @@ class $modify(PlayerObject) {
 		else
 			mult = this->m_isUpsideDown ? -1 : 1;
 
-		trailParticles->setSpeed(g_trail[i].speed * size);
-		trailParticles->setSpeedVar(g_trail[i].speedVar * size);
 		trailParticles->setAngle(angle * mult);
 		trailParticles->setAngleVar(angleVar);
 		trailParticles->setGravity(gravity * mult);
+
+		shipParticles->setAngle(angle * mult);
+		shipParticles->setAngleVar(angleVar);
+		shipParticles->setGravity(gravity * mult);
+
+		// ---------- legacy scaling affected ig ----------
+		trailParticles->setSpeed(g_trail[i].speed * size);
+		trailParticles->setSpeedVar(g_trail[i].speedVar * size);
+		trailParticles->setStartSize(g_trail[i].startSize * size);
+		trailParticles->setStartSizeVar(g_trail[i].startSizeVar * size);
+		trailParticles->setEndSize(g_trail[i].endSize * size);
+		trailParticles->setEndSizeVar(g_trail[i].endSizeVar * size);
 
 		shipParticles->setSpeed(g_shipClick[i].speed * size);
 		shipParticles->setSpeedVar(g_shipClick[i].speedVar * size);
 		shipParticles->setStartSize(g_shipClick[i].startSize * size);
 		shipParticles->setStartSizeVar(g_shipClick[i].startSizeVar * size);
-		shipParticles->setAngle(angle * mult);
-		shipParticles->setAngleVar(angleVar);
-		shipParticles->setGravity(gravity * mult);
+		shipParticles->setEndSize(g_shipClick[i].endSize * size);
+		shipParticles->setEndSizeVar(g_shipClick[i].endSizeVar * size);
+
+		groundParticles->setSpeed(g_drag[i].speed * size);
+		groundParticles->setSpeedVar(g_drag[i].speedVar * size);
+		groundParticles->setStartSize(g_drag[i].startSize * size);
+		groundParticles->setStartSizeVar(g_drag[i].startSizeVar * size);
+		groundParticles->setEndSize(g_drag[i].endSize * size);
+		groundParticles->setEndSizeVar(g_drag[i].endSizeVar * size);
 	}
 };
