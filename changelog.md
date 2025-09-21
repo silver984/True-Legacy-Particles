@@ -1,5 +1,9 @@
 # True Legacy Particles
 
+## 1.4.6
+- Updated to Geode 4.8.0
+- Minor tweaks
+
 ## 1.4.5
 - oops
 

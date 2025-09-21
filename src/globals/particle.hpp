@@ -11,7 +11,6 @@ public:
 	}
 	
 	bool isGrounded = false;
-	bool isDeviated = false;
 	bool spiderDashed = false;
 
 	class Drag {

@@ -9,7 +9,6 @@ using namespace geode::prelude;
 void scale(PlayerObject* player, bool isMode) {
 	if (!g_isTrueValues || g_isLegacyScaling || !isMode) return;
 	int i = playerIndex(player);
-	g_particle[i].isDeviated = true;
 	g_drag[i].posVar = g_sourcePosVar;
 	g_trail[i].posVar = g_sourcePosVar;
 	g_trail[i].speed = g_sourceSpeed.x;

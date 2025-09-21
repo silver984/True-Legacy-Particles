@@ -59,11 +59,7 @@ class $modify(PlayerObject) {
 		groundParticles->setAngleVar(angleVar);
 		groundParticles->setGravity(gravity);
 
-		int mult;
-		if (g_particle[i].isDeviated)
-			mult = 1;
-		else
-			mult = this->m_isUpsideDown ? -1 : 1;
+		int mult = this->m_isUpsideDown ? -1 : 1;
 
 		trailParticles->setAngle(angle * mult);
 		trailParticles->setAngleVar(angleVar);
@@ -73,7 +69,7 @@ class $modify(PlayerObject) {
 		shipParticles->setAngleVar(angleVar);
 		shipParticles->setGravity(gravity * mult);
 
-		// ---------- legacy scaling affected ig ----------
+		// ---------- legacy scaling affected ----------
 		trailParticles->setSpeed(g_trail[i].speed * size);
 		trailParticles->setSpeedVar(g_trail[i].speedVar * size);
 		trailParticles->setStartSize(g_trail[i].startSize * size);

@@ -80,7 +80,6 @@ class $modify(PlayerObject) {
 			g_shipClick[i].endSizeVar = g_sourceEndSize.y * 1.5;
 
 			g_particle[i].isGrounded = false;
-			g_particle[i].isDeviated = false;
 			g_land[i].gate = false;
 			g_land[i].landSwitch = 0;
 		}
