@@ -1,5 +1,12 @@
 # True Legacy Particles
 
+## 2.0.0
+- Updated to Geode 4.10.0
+- Simplified settings
+- Reworked code
+- Removed incompatibility with QOLMod
+- Legacy Scaling is now on by default
+
 ## 1.4.6
 - Updated to Geode 4.8.0
 - Minor tweaks

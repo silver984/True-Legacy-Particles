@@ -1,5 +1,5 @@
 {
-	"geode": "4.8.0",
+	"geode": "4.10.0",
 	"gd": {
 		"win": "2.2074",
 		"android": "2.2074",
@@ -8,15 +8,9 @@
 	},
 	"id": "silverstar.legacy-particles",
 	"name": "True Legacy Particles",
-	"version": "v1.4.6",
+	"version": "v2.0.0",
 	"developer": "SILVERSTAR",
 	"description": "",
-	"incompatibilities": {
-		"thesillydoggo.qolmod": {
-			"importance": "breaking",
-			"version": ">=1.7.5"
-		}
-	},
 	"links": {
 		"source": "https://github.com/silver984/True-Legacy-Particles"
 	},
@@ -47,54 +41,19 @@
 			"type": "bool",
 			"description": "Restores how the player's particles were scaled down when you enter a mini portal.",
 			"enable-if": "switch",
-			"default": false
+			"default": true
 		},
-		"true-vals": {
-			"name": "True Values",
+		"legacy-values": {
+			"name": "Legacy Values",
 			"type": "bool",
 			"description": "Restores how the player's particles change and shift in space, speed, and size after entering certain portals.",
 			"enable-if": "switch",
 			"default": true
 		},
-		"land-particles": {
-			"type": "title",
-			"name": "Player land particle setting(s)"
-		},
-		"no-rotation": {
-			"name": "No Rotation",
+		"legacy-rotation": {
+			"name": "Legacy Rotation",
 			"type": "bool",
 			"enable-if": "switch",
-			"default": true
-		},
-		"always-spawn": {
-			"name": "Always Spawn",
-			"type": "bool",
-			"description": "Always make sure to spawn when player lands, just like before version 2.2.",
-			"enable-if": "switch",
-			"default": true
-		},
-		"dash-particles": {
-			"type": "title",
-			"name": "Dash particle setting(s)"
-		},
-		"center-dash": {
-			"name": "Centered Dash Particles",
-			"type": "bool",
-			"enable-if": "switch",
-			"default": true
-		},
-		"center-dash-x": {
-			"name": "x axis",
-			"type": "bool",
-			"description": "Center the x axis.",
-			"enable-if": "center-dash && switch",
-			"default": false
-		},
-		"center-dash-y": {
-			"name": "y axis",
-			"type": "bool",
-			"description": "Center the y axis.",
-			"enable-if": "center-dash && switch",
 			"default": true
 		},
 		"misc": {

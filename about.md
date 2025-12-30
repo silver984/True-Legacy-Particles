@@ -1,6 +1,6 @@
 # True Legacy Particles
 
-A very faithful recreation of the old particle system for the player vehicle.
+Brings back old particle behavior for the player vehicle. Most noticable in mini mode or ship gamemode.
 
 #### Read:
 This mod utilizes a <cg>.plist</c> file called "dragEffect" in the game files.
@@ -10,19 +10,9 @@ This mod utilizes a <cg>.plist</c> file called "dragEffect" in the game files.
 ### Player particle system setting(s)
 
 - **Legacy Tracking** - Restores how ground particles followed the player. On by default.
-- **Legacy Scaling** - Restores how the player's particles were scaled down when you enter a mini portal. Off by default.
-- **True Values** - Restores how the player's particles change and shift in space, speed, and size after entering certain portals. On by default.
-
-### Player land particle setting(s)
-
-- **No Rotation** - Disables rotation for the land particles, just like before version 2.2. On by default.
-- **Always Spawn** - Always make sure to spawn when player lands, just like before version 2.2. On by default.
-
-### Dash particle setting(s)
-
-- **Centered Dash Particles** - Centers the dash particles, just like before version 2.2. On by default.
-- **x axis** - Centers the x axis. On by default.
-- **y axis** - Centers the y axis. On by default.
+- **Legacy Scaling** - Restores how the player's particles were scaled down when you enter a mini portal. On by default.
+- **Legacy Values** - Restores how the player's particles change and shift in space, speed, and size after entering certain portals. On by default.
+- **Legacy Rotation** - Disables rotation for particles, just like before version 2.2. On by default.
 
 ### Miscellaneous
 
