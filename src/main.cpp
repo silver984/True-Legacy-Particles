@@ -90,7 +90,7 @@ namespace
 		}
 
 		particle->setGravity(curGravity);
-		particle->setPosVar(base.posVar * scale);
+		particle->setPosVar(cocos2d::CCPoint(base.posVar.x * scale, base.posVar.y * scale));
 		particle->setSpeed(base.speed * scale);
 		particle->setSpeedVar(base.speedVar * scale);
 		particle->setStartSize(base.startSize * scale);
@@ -147,6 +147,12 @@ namespace
 		cocos2d::CCPoint old = a;
 		a = cocos2d::CCPoint(old.y, old.x);
 	}
+
+	void rotateValues(tlp::ParticleBase& base)
+	{
+		::swapPointValues(base.posVar);
+		::swapPointValues(base.gravity);
+	}
 }
 
 class $modify(PlayerObject)
@@ -162,9 +168,11 @@ class $modify(PlayerObject)
 		std::vector<std::string> ids;
 		float lastVehicleSize = 0.f;
 		float sinceGrounded = 0.f;
+		float groundedElapsed = 0.f;
 		bool isOnGround = false;
 		bool hasHitGround = false;
 		bool valuesShifted = false;
+		bool playedSpiderDashEffect = false;
 		unsigned int curLand : 1 = 1u;
 		unsigned int ground : 2 = 0u;
 		unsigned int lastGround : 2 = 0u;
@@ -301,7 +309,7 @@ class $modify(PlayerObject)
 
 	void update(float delta) override
 	{
-		if (tlp::settings.isModEnabled || ::isPlayerEnabled(m_isSecondPlayer))
+		if (tlp::settings.isModEnabled && ::isPlayerEnabled(m_isSecondPlayer))
 		{
 			if (m_fields->isOnGround)
 			{
@@ -344,10 +352,12 @@ class $modify(PlayerObject)
 					m_fields->hasHitGround = true;
 				}
 
+				m_fields->groundedElapsed += delta;
 				m_fields->sinceGrounded = 0.f;
 			}
 			else
 			{
+				m_fields->groundedElapsed = 0.f;
 				m_fields->sinceGrounded += delta;
 				m_fields->hasHitGround = false;
 			}
@@ -382,7 +392,6 @@ class $modify(PlayerObject)
 			m_fields->lastVehicleSize = m_vehicleSize;
 		}
 
-		cocos2d::CCPoint playerPos = getPosition();
 
 		if (tlp::settings.isLegacyTracking)
 		{
@@ -395,8 +404,8 @@ class $modify(PlayerObject)
 				offsets = cocos2d::CCPoint(m_isGoingLeft ? factors.x : -factors.x,
 										   m_isUpsideDown ? factors.y : -factors.y);
 
-				newPos = cocos2d::CCPoint(playerPos.x + (offsets.x * m_vehicleSize),
-										  playerPos.y + (m_isOnGround3 ? offsets.y : -offsets.y * m_vehicleSize));
+				newPos = cocos2d::CCPoint(getPosition().x + (offsets.x * m_vehicleSize),
+										  getPosition().y + (m_isOnGround3 ? offsets.y : -offsets.y * m_vehicleSize));
 			}
 
 			if (isGroundWall)
@@ -404,14 +413,24 @@ class $modify(PlayerObject)
 				offsets = cocos2d::CCPoint(m_isGoingLeft ? factors.y : -factors.y,
 										   m_isUpsideDown ? factors.x : -factors.x);
 
-				newPos = cocos2d::CCPoint(playerPos.x + (offsets.y * m_vehicleSize),
-										  playerPos.y + (m_isOnGround3 ? offsets.x : -offsets.x * m_vehicleSize));
+				newPos = cocos2d::CCPoint(getPosition().x + (offsets.y * m_vehicleSize),
+										  getPosition().y + (m_isOnGround3 ? offsets.x : -offsets.x * m_vehicleSize));
 			}
 			
+			bool isCube = !m_isShip && !m_isBall && !m_isBird && !m_isDart && !m_isRobot && !m_isSpider && !m_isSwing;
+			bool isValidGameMode = isCube || m_isBall || m_isRobot || m_isSpider;
+			if (m_fields->playedSpiderDashEffect &&
+				m_fields->groundedElapsed >= 0.5f &&
+				isValidGameMode && isVisible())
+			{
+				m_playerGroundParticles->resumeSystem();
+				m_fields->playedSpiderDashEffect = false;
+			}
+
 			m_playerGroundParticles->setPosition(newPos);
 		}
 
-		m_dashParticles->setPosition(playerPos);
+		m_dashParticles->setPosition(getPosition());
 
 		m_fields->isOnGround = false;
 	}
@@ -494,20 +513,40 @@ class $modify(PlayerObject)
 			{
 				if (::isGroundWall(m_fields->ground) && !m_fields->valuesShifted)
 				{
-					::swapPointValues(m_fields->dragParticle.posVar);
-					::swapPointValues(m_fields->dragParticle.gravity);
+					::rotateValues(m_fields->dragParticle);
+					::rotateValues(m_fields->trailParticle);
+					::rotateValues(m_fields->shipClickParticle);
 					m_fields->valuesShifted = true;
 				}
 
 				if (!::isGroundWall(m_fields->ground) && m_fields->valuesShifted)
 				{
-					::swapPointValues(m_fields->dragParticle.posVar);
-					::swapPointValues(m_fields->dragParticle.gravity);
+					::rotateValues(m_fields->dragParticle);
+					::rotateValues(m_fields->trailParticle);
+					::rotateValues(m_fields->shipClickParticle);
 					m_fields->valuesShifted = false;
 				}
 
 				m_fields->lastGround = m_fields->ground;
 			}
+		}
+	}
+
+	void playSpiderDashEffect(cocos2d::CCPoint from, cocos2d::CCPoint to)
+	{
+		PlayerObject::playSpiderDashEffect(from, to);
+
+		if (tlp::settings.isModEnabled && tlp::settings.isLegacyTracking)
+		{
+			if (!::isPlayerEnabled(m_isSecondPlayer))
+			{
+				return;
+			}
+
+			m_playerGroundParticles->resetSystem();
+			m_playerGroundParticles->stopSystem();
+
+			m_fields->playedSpiderDashEffect = true;
 		}
 	}
 };

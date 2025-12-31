@@ -1,5 +1,9 @@
 # True Legacy Particles
 
+## 2.0.1
+- Minor tweaks
+- Fixed spider orb bug
+
 ## 2.0.0
 - Updated to Geode 4.10.0
 - Simplified settings
