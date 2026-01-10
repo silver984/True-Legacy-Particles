@@ -37,9 +37,10 @@ namespace tlp
 		float angle = 0.f;
 		float angleVar = 0.f;
 
-		cocos2d::CCPoint posVar = cocos2d::CCPoint(0, 0);
+		cocos2d::CCPoint posVar = cocos2d::CCPoint(0.f, 0.f);
+		cocos2d::CCPoint gravity = cocos2d::CCPoint(0.f, 0.f);
 
-		cocos2d::CCPoint gravity = cocos2d::CCPoint(0, 0);
+		bool isModeB = false;
 	};
 }
 
@@ -68,31 +69,34 @@ namespace
 
 	void updateValues(cocos2d::CCParticleSystemQuad*& particle, tlp::ParticleBase& base, float scale, bool isUpsideDown, bool isGroundWall)
 	{
-		float curAngle = (isUpsideDown ? -base.angle : base.angle) - (isGroundWall ? 90.f : 0.f);
-		
-		particle->setAngle(curAngle);
-		particle->setAngleVar(base.angleVar * scale);
-		particle->setEndSize(base.endSize * scale);
-		particle->setEndSizeVar(base.endSizeVar * scale);
-		
-		float a = 0.f;
-		cocos2d::CCPoint curGravity = cocos2d::CCPoint();
-
-		if (!isGroundWall)
+		if (!base.isModeB)
 		{
-			a = isUpsideDown ? -base.gravity.y : base.gravity.y;
-			curGravity = cocos2d::CCPoint(base.gravity.x, a);
-		}
-		else
-		{
-			a = isUpsideDown ? -base.gravity.x : base.gravity.x;
-			curGravity = cocos2d::CCPoint(a, base.gravity.y);
+			float curAngle = (isUpsideDown ? -base.angle : base.angle) - (isGroundWall ? 90.f : 0.f);
+			particle->setAngle(curAngle);
+			particle->setAngleVar(base.angleVar * scale);
+			particle->setEndSize(base.endSize * scale);
+			particle->setEndSizeVar(base.endSizeVar * scale);
+
+			float a = 0.f;
+			cocos2d::CCPoint curGravity = cocos2d::CCPoint();
+
+			if (!isGroundWall)
+			{
+				a = isUpsideDown ? -base.gravity.y : base.gravity.y;
+				curGravity = cocos2d::CCPoint(base.gravity.x, a);
+			}
+			else
+			{
+				a = isUpsideDown ? -base.gravity.x : base.gravity.x;
+				curGravity = cocos2d::CCPoint(a, base.gravity.y);
+			}
+
+			particle->setGravity(curGravity);
+			particle->setPosVar(cocos2d::CCPoint(base.posVar.x * scale, base.posVar.y * scale));
+			particle->setSpeed(base.speed * scale);
+			particle->setSpeedVar(base.speedVar * scale);
 		}
 
-		particle->setGravity(curGravity);
-		particle->setPosVar(cocos2d::CCPoint(base.posVar.x * scale, base.posVar.y * scale));
-		particle->setSpeed(base.speed * scale);
-		particle->setSpeedVar(base.speedVar * scale);
 		particle->setStartSize(base.startSize * scale);
 		particle->setStartSizeVar(base.startSizeVar * scale);
 	}
@@ -167,7 +171,6 @@ class $modify(PlayerObject)
 		cocos2d::CCPoint orgPosVar = cocos2d::CCPoint(0.f, 0.f);
 		std::vector<std::string> ids;
 		float lastVehicleSize = 0.f;
-		float sinceGrounded = 0.f;
 		float groundedElapsed = 0.f;
 		bool isOnGround = false;
 		bool hasHitGround = false;
@@ -178,7 +181,7 @@ class $modify(PlayerObject)
 		unsigned int lastGround : 2 = 0u;
 	};
 
-	bool init(int player, int ship, GJBaseGameLayer* gameLayer, cocos2d::CCLayer* layer, bool playLayer)
+	bool init(int player, int ship, GJBaseGameLayer * gameLayer, cocos2d::CCLayer * layer, bool playLayer)
 	{
 		if (!PlayerObject::init(player, ship, gameLayer, layer, playLayer))
 		{
@@ -196,7 +199,7 @@ class $modify(PlayerObject)
 
 		tlp::settings.worksForP1 = mod::get()->getSettingValue<bool>("player-1");
 		tlp::settings.worksForP2 = mod::get()->getSettingValue<bool>("player-2");
-		
+
 		if (!::isPlayerEnabled(m_isSecondPlayer))
 		{
 			return true;
@@ -239,26 +242,31 @@ class $modify(PlayerObject)
 		auto& trailParticle = m_fields->trailParticle;
 		auto& shipClickParticle = m_fields->shipClickParticle;
 
+		dragParticle.isModeB = m_playerGroundParticles->getEmitterMode() == 1;
+		trailParticle.isModeB = m_trailingParticles->getEmitterMode() == 1;
+		shipClickParticle.isModeB = m_shipClickParticles->getEmitterMode() == 1;
+
 		cocos2d::CCDictionary* dragDict = cocos2d::CCDictionary::createWithContentsOfFile("dragEffect.plist");
 
 		dragParticle.angle = ((cocos2d::CCString*)dragDict->objectForKey("angle"))->floatValue();
 		dragParticle.angleVar = ((cocos2d::CCString*)dragDict->objectForKey("angleVariance"))->floatValue();
 		dragParticle.endSize = ((cocos2d::CCString*)dragDict->objectForKey("finishParticleSize"))->floatValue();
 		dragParticle.endSizeVar = ((cocos2d::CCString*)dragDict->objectForKey("finishParticleSizeVariance"))->floatValue();
-		
+
 		dragParticle.gravity = cocos2d::CCPoint(((cocos2d::CCString*)dragDict->objectForKey("gravityx"))->floatValue(),
 												((cocos2d::CCString*)dragDict->objectForKey("gravityy"))->floatValue());
-		
+
 		dragParticle.posVar = cocos2d::CCPoint(((cocos2d::CCString*)dragDict->objectForKey("sourcePositionVariancex"))->floatValue(),
 											   ((cocos2d::CCString*)dragDict->objectForKey("sourcePositionVariancey"))->floatValue());
-		
+
 		m_fields->orgPosVar = dragParticle.posVar;
 
 		if (!tlp::settings.isLegacyValues)
 		{
-			::swapPointValues(dragParticle.posVar);
+			m_fields->orgPosVar = cocos2d::CCPoint(1.f, 5.f);
+			dragParticle.posVar = cocos2d::CCPoint(5.f, 1.f);
 		}
-		
+
 		dragParticle.speed = ((cocos2d::CCString*)dragDict->objectForKey("speed"))->floatValue();
 		dragParticle.speedVar = ((cocos2d::CCString*)dragDict->objectForKey("speedVariance"))->floatValue();
 		dragParticle.startSize = ((cocos2d::CCString*)dragDict->objectForKey("startParticleSize"))->floatValue();
@@ -298,8 +306,6 @@ class $modify(PlayerObject)
 				return;
 			}
 
-			m_fields->sinceGrounded = 0.f;
-
 			for (auto& it : m_fields->landParticleObjects)
 			{
 				it->setRotation(0.f);
@@ -315,7 +321,7 @@ class $modify(PlayerObject)
 			{
 				if (!m_fields->hasHitGround)
 				{
-					if (isVisible() && m_fields->sinceGrounded >= 8.f)
+					if (isVisible())
 					{
 						m_fields->curLand++;
 
@@ -353,12 +359,10 @@ class $modify(PlayerObject)
 				}
 
 				m_fields->groundedElapsed += delta;
-				m_fields->sinceGrounded = 0.f;
 			}
 			else
 			{
 				m_fields->groundedElapsed = 0.f;
-				m_fields->sinceGrounded += delta;
 				m_fields->hasHitGround = false;
 			}
 		}
@@ -374,8 +378,10 @@ class $modify(PlayerObject)
 		bool isGroundWall = ::isGroundWall(m_fields->ground);
 
 		::updateValues(m_playerGroundParticles, m_fields->dragParticle, scale, m_isUpsideDown, isGroundWall);
-		::updateValues(m_trailingParticles, m_fields->trailParticle, scale, false, isGroundWall);
-		::updateValues(m_shipClickParticles, m_fields->shipClickParticle, scale, false, isGroundWall);
+
+		bool trailIsUpsideDown = tlp::settings.isLegacyValues ? false : m_isUpsideDown;
+		::updateValues(m_trailingParticles, m_fields->trailParticle, scale, trailIsUpsideDown, isGroundWall);
+		::updateValues(m_shipClickParticles, m_fields->shipClickParticle, scale, trailIsUpsideDown, isGroundWall);
 
 		if (tlp::settings.isLegacyScaling && m_fields->lastVehicleSize != m_vehicleSize)
 		{
@@ -416,7 +422,7 @@ class $modify(PlayerObject)
 				newPos = cocos2d::CCPoint(getPosition().x + (offsets.y * m_vehicleSize),
 										  getPosition().y + (m_isOnGround3 ? offsets.x : -offsets.x * m_vehicleSize));
 			}
-			
+
 			bool isCube = !m_isShip && !m_isBall && !m_isBird && !m_isDart && !m_isRobot && !m_isSpider && !m_isSwing;
 			bool isValidGameMode = isCube || m_isBall || m_isRobot || m_isSpider;
 			if (m_fields->playedSpiderDashEffect &&
@@ -445,7 +451,7 @@ class $modify(PlayerObject)
 			{
 				return;
 			}
-			
+
 			m_fields->dragParticle.posVar = m_fields->orgPosVar;
 			::copyValues(m_fields->trailParticle, m_fields->dragParticle);
 			::copyValues(m_fields->shipClickParticle, m_fields->dragParticle);
@@ -464,7 +470,7 @@ class $modify(PlayerObject)
 		::widenedPosVar(m_fields->dragParticle, isSpider, m_isSecondPlayer);
 	}
 
-	void hitGround(GameObject* object, bool isCeiling)
+	void hitGround(GameObject * object, bool isCeiling)
 	{
 		PlayerObject::hitGround(object, isCeiling);
 
@@ -483,7 +489,7 @@ class $modify(PlayerObject)
 	{
 		PlayerObject::flipGravity(flip, noEffects);
 
-		if (tlp::settings.isModEnabled && !tlp::settings.isLegacyValues)
+		if (tlp::settings.isModEnabled && !tlp::settings.isLegacyValues && !m_isSpider && !m_isRobot)
 		{
 			if (!::isPlayerEnabled(m_isSecondPlayer))
 			{

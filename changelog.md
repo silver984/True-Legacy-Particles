@@ -1,5 +1,8 @@
 # True Legacy Particles
 
+## 2.0.2
+- Fixed radius emitter bug
+
 ## 2.0.1
 - Minor tweaks
 - Fixed spider orb bug
