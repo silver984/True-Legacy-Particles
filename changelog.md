@@ -1,5 +1,8 @@
 # True Legacy Particles
 
+## 2.0.3
+- Update to Geode 5.3.0
+
 ## 2.0.2
 - Fixed radius emitter bug
 
