@@ -1,7 +1,9 @@
 # True Legacy Particles
 
-## 2.0.3
+## 3.0.0
 - Update to Geode 5.3.0
+- Removed settings
+- Reworked code
 
 ## 2.0.2
 - Fixed radius emitter bug

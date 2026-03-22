@@ -1,109 +1,147 @@
 #include <tlp/CCParticleSystem.hpp>
 #include <tlp/Settings.hpp>
+#include <Geode/loader/Log.hpp>
 
 void TLPCCParticleSystem::loadScaledDefaults(float v)
 {
-	if (!tlp::g_isModEnabled || !tlp::g_isLegacyScaling)
+	auto& settings = tlp::Settings::get();
+
+	if (!settings.isModEnabled())
 	{
 		cocos2d::CCParticleSystem::loadScaledDefaults(v);
 		return;
 	}
 
-	if (!std::string(this->getID()).starts_with(geode::Mod::get()->getID()))
+	if (std::string(getID()).starts_with(geode::Mod::get()->getID()))
 	{
-		cocos2d::CCParticleSystem::loadScaledDefaults(v);
+		return;
 	}
+	
+	cocos2d::CCParticleSystem::loadScaledDefaults(v);
+}
+
+void TLPCCParticleSystem::resetSystem()
+{
+	auto& settings = tlp::Settings::get();
+
+	if (!settings.isModEnabled())
+	{
+		cocos2d::CCParticleSystem::resetSystem();
+		return;
+	}
+
+	if (getID() == "land-particles-0"_spr || getID() == "land-particles-1"_spr)
+	{
+		return;
+	}
+
+	cocos2d::CCParticleSystem::resetSystem();
 }
 
 void TLPCCParticleSystem::setAngle(float var)
 {
-	if (!tlp::g_isModEnabled || !tlp::g_isLegacyValues)
+	auto& settings = tlp::Settings::get();
+
+	if (!settings.isModEnabled())
 	{
 		cocos2d::CCParticleSystem::setAngle(var);
 		return;
 	}
 
-	if (getID() != "trailing-particles"_spr &&
-		getID() != "ship-click-particles"_spr)
+	if (getID() == "trailing-particles"_spr || getID() == "ship-click-particles"_spr || getID() == "land-particles-0"_spr || getID() == "land-particles-1"_spr)
 	{
-		cocos2d::CCParticleSystem::setAngle(var);
+		return;
 	}
+	
+	cocos2d::CCParticleSystem::setAngle(var);
 }
 
 void TLPCCParticleSystem::setAngleVar(float var)
 {
-	if (!tlp::g_isModEnabled || !tlp::g_isLegacyValues)
+	auto& settings = tlp::Settings::get();
+
+	if (!settings.isModEnabled())
 	{
 		cocos2d::CCParticleSystem::setAngleVar(var);
 		return;
 	}
 
-	if (getID() != "trailing-particles"_spr &&
-		getID() != "ship-click-particles"_spr)
+	if (getID() == "trailing-particles"_spr || getID() == "ship-click-particles"_spr || getID() == "land-particles-0"_spr || getID() == "land-particles-1"_spr)
 	{
-		cocos2d::CCParticleSystem::setAngleVar(var);
+		return;
 	}
+	
+	cocos2d::CCParticleSystem::setAngleVar(var);
 }
 
 void TLPCCParticleSystem::setGravity(const cocos2d::CCPoint& g)
 {
-	if (!tlp::g_isModEnabled || !tlp::g_isLegacyValues)
+	auto& settings = tlp::Settings::get();
+
+	if (!settings.isModEnabled())
 	{
 		cocos2d::CCParticleSystem::setGravity(g);
 		return;
 	}
 
-	if (getID() != "trailing-particles"_spr &&
-		getID() != "ship-click-particles"_spr)
+	if (getID() == "trailing-particles"_spr || getID() == "ship-click-particles"_spr || getID() == "land-particles-0"_spr || getID() == "land-particles-1"_spr)
 	{
-		cocos2d::CCParticleSystem::setGravity(g);
+		return;
 	}
+	
+	cocos2d::CCParticleSystem::setGravity(g);
 }
 
 void TLPCCParticleSystem::setPosVar(cocos2d::CCPoint const& var)
 {
-	if (!tlp::g_isModEnabled || !tlp::g_isLegacyValues)
+	auto& settings = tlp::Settings::get();
+
+	if (!settings.isModEnabled())
 	{
 		cocos2d::CCParticleSystem::setPosVar(var);
 		return;
 	}
 
-	if (getID() != "player-ground-particles"_spr &&
-		getID() != "trailing-particles"_spr &&
-		getID() != "ship-click-particles"_spr)
+	if (getID() == "player-ground-particles"_spr || getID() == "trailing-particles"_spr || getID() == "ship-click-particles"_spr)
 	{
-		cocos2d::CCParticleSystem::setPosVar(var);
+		return;
 	}
+	
+	cocos2d::CCParticleSystem::setPosVar(var);
 }
 
 void TLPCCParticleSystem::setSpeed(float speed)
 {
-	if (!tlp::g_isModEnabled || !tlp::g_isLegacyValues)
+	auto& settings = tlp::Settings::get();
+
+	if (!settings.isModEnabled())
 	{
 		cocos2d::CCParticleSystem::setSpeed(speed);
 		return;
 	}
 
-	if (getID() != "player-ground-particles"_spr &&
-		getID() != "trailing-particles"_spr &&
-		getID() != "ship-click-particles"_spr)
+	if (getID() == "player-ground-particles"_spr || getID() == "trailing-particles"_spr || getID() == "ship-click-particles"_spr)
 	{
-		cocos2d::CCParticleSystem::setSpeed(speed);
+		return;
 	}
+	
+	cocos2d::CCParticleSystem::setSpeed(speed);
 }
 
 void TLPCCParticleSystem::setSpeedVar(float speed)
 {
-	if (!tlp::g_isModEnabled || !tlp::g_isLegacyValues)
+	auto& settings = tlp::Settings::get();
+
+	if (!settings.isModEnabled())
 	{
 		cocos2d::CCParticleSystem::setSpeedVar(speed);
 		return;
 	}
 
-	if (getID() != "player-ground-particles"_spr &&
-		getID() != "trailing-particles"_spr &&
-		getID() != "ship-click-particles"_spr)
+	if (getID() == "player-ground-particles"_spr || getID() == "trailing-particles"_spr || getID() == "ship-click-particles"_spr)
 	{
-		cocos2d::CCParticleSystem::setSpeedVar(speed);
+		return;
 	}
+
+	cocos2d::CCParticleSystem::setSpeedVar(speed);
 }

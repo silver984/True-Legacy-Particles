@@ -6,6 +6,7 @@
 struct TLPPlayerObject : geode::Modify<TLPPlayerObject, PlayerObject>
 {
 	bool init(int player, int ship, GJBaseGameLayer* gameLayer, cocos2d::CCLayer* layer, bool playLayer);
+	void __onGround();
 	void toggleRobotMode(bool enable, bool noEffects);
 	void toggleSpiderMode(bool enable, bool noEffects);
 	void update(float dt) override;
@@ -14,5 +15,8 @@ struct TLPPlayerObject : geode::Modify<TLPPlayerObject, PlayerObject>
 	{
 		float lastVehicleScale = 0.f;
 		std::vector<cocos2d::CCParticleSystemQuad*> allParticles;
+		std::vector<cocos2d::CCParticleSystemQuad*> landParticles;
+		bool lastIsOnGround = false;
+		int currentLandParticle = -1;
 	};
 };

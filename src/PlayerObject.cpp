@@ -1,6 +1,7 @@
 #include <tlp/PlayerObject.hpp>
 #include <tlp/CCParticleSystem.hpp>
 #include <tlp/Settings.hpp>
+#include <string>
 
 bool TLPPlayerObject::init(int player, int ship, GJBaseGameLayer* gameLayer, cocos2d::CCLayer* layer, bool playLayer)
 {
@@ -9,9 +10,7 @@ bool TLPPlayerObject::init(int player, int ship, GJBaseGameLayer* gameLayer, coc
 		return false;
 	}
 
-	if (!tlp::g_isModEnabled ||
-		(!tlp::g_worksForP2 && m_isSecondPlayer) ||
-		(!tlp::g_worksForP1 && !m_isSecondPlayer))
+	if (!tlp::Settings::get().isModEnabled())
 	{
 		return true;
 	}
@@ -40,18 +39,42 @@ bool TLPPlayerObject::init(int player, int ship, GJBaseGameLayer* gameLayer, coc
 	m_fields->allParticles.push_back(m_landParticles0);
 	m_fields->allParticles.push_back(m_landParticles1);
 
+	m_fields->landParticles.push_back(m_landParticles0);
+	m_fields->landParticles.push_back(m_landParticles1);
+
 	return true;
+}
+
+void TLPPlayerObject::__onGround()
+{
+	if (!isVisible())
+	{
+		return;
+	}
+
+	m_fields->currentLandParticle = (m_fields->currentLandParticle + 1) % 2;
+
+	auto& current = m_fields->landParticles[m_fields->currentLandParticle];
+	std::string lastID = current->getID();
+	current->setID("");
+	cocos2d::CCPoint posFactor = cocos2d::CCPoint(0.f, (m_height / 2.f) * m_vehicleSize);
+	posFactor.y = m_isUpsideDown ? -posFactor.y : posFactor.y;
+	current->setPosition(getPosition() - posFactor);
+	current->setRotation(m_isUpsideDown ? 180.f : 0.f);
+	current->resetSystem();
+	current->setID(lastID);
 }
 
 void TLPPlayerObject::toggleRobotMode(bool enable, bool noEffects)
 {
 	PlayerObject::toggleRobotMode(enable, noEffects);
 
-	if (tlp::g_isModEnabled && tlp::g_isLegacyValues && m_isRobot)
+	if (tlp::Settings::get().isModEnabled() && m_isRobot)
 	{
+		std::string lastID = m_playerGroundParticles->getID();
 		m_playerGroundParticles->setID("");
 		m_playerGroundParticles->setPosVar(cocos2d::CCPoint(15.f, 0.f));
-		m_playerGroundParticles->setID("player-ground-particles"_spr);
+		m_playerGroundParticles->setID(lastID);
 	}
 }
 
@@ -59,31 +82,28 @@ void TLPPlayerObject::toggleSpiderMode(bool enable, bool noEffects)
 {
 	PlayerObject::toggleSpiderMode(enable, noEffects);
 
-	if (tlp::g_isModEnabled && tlp::g_isLegacyValues && m_isSpider)
+	if (tlp::Settings::get().isModEnabled() && m_isSpider)
 	{
+		std::string lastID = m_playerGroundParticles->getID();
 		m_playerGroundParticles->setID("");
 		m_playerGroundParticles->setPosVar(cocos2d::CCPoint(15.f, 0.f));
-		m_playerGroundParticles->setID("player-ground-particles"_spr);
+		m_playerGroundParticles->setID(lastID);
 	}
 }
 
 void TLPPlayerObject::update(float dt)
 {
-	if (!tlp::g_isModEnabled ||
-		(!tlp::g_worksForP2 && m_isSecondPlayer) ||
-		(!tlp::g_worksForP1 && !m_isSecondPlayer))
+	if (!tlp::Settings::get().isModEnabled())
 	{
 		PlayerObject::update(dt);
 		return;
 	}
 
-	if (tlp::g_isLegacyTracking)
-	{
-		cocos2d::CCPoint posFactor = cocos2d::CCPoint(10.f, m_isUpsideDown ? -13.f : 13.f) * m_vehicleSize;
-		m_playerGroundParticles->setPosition(getPosition() - posFactor);
-	}
+	cocos2d::CCPoint posFactor = cocos2d::CCPoint(10.f, m_isUpsideDown ? -13.f : 13.f) * m_vehicleSize;
+	posFactor.y = !m_isOnGround3 ? -posFactor.y : posFactor.y;
+	m_playerGroundParticles->setPosition(getPosition() - posFactor);
 
-	if (tlp::g_isLegacyScaling && m_fields->lastVehicleScale != m_vehicleSize)
+	if (m_fields->lastVehicleScale != m_vehicleSize)
 	{
 		for (auto& particle : m_fields->allParticles)
 		{
@@ -91,6 +111,19 @@ void TLPPlayerObject::update(float dt)
 		}
 
 		m_fields->lastVehicleScale = m_vehicleSize;
+	}
+
+	if (m_isOnGround)
+	{
+		if (m_fields->lastIsOnGround != m_isOnGround)
+		{
+			__onGround();
+			m_fields->lastIsOnGround = m_isOnGround;
+		}
+	}
+	else
+	{
+		m_fields->lastIsOnGround = false;
 	}
 
 	PlayerObject::update(dt);

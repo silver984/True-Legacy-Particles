@@ -7,6 +7,7 @@
 struct TLPCCParticleSystem : geode::Modify<TLPCCParticleSystem, cocos2d::CCParticleSystem>
 {
 	void loadScaledDefaults(float);
+	void resetSystem();
 	void setAngle(float var) override;
 	void setAngleVar(float var) override;
 	void setGravity(const cocos2d::CCPoint& g) override;

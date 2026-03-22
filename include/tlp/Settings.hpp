@@ -2,11 +2,34 @@
 
 namespace tlp
 {
-	inline bool g_isModEnabled = true;
-	inline bool g_isLegacyTracking = true;
-	inline bool g_isLegacyScaling = true;
-	inline bool g_isLegacyValues = true;
-	inline bool g_isLegacyRotation = true;
-	inline bool g_worksForP1 = true;
-	inline bool g_worksForP2 = true;
-}
+
+class Settings
+{
+private:
+	Settings() = default;
+	~Settings() = default;
+
+public:
+	static inline Settings& get()
+	{
+		static Settings instance;
+		return instance;
+	}
+
+	Settings(const Settings&) = delete;
+	Settings& operator=(const Settings&) = delete;
+	Settings(Settings&&) = delete;
+	Settings& operator=(Settings&&) = delete;
+
+	void update();
+
+	inline bool isModEnabled() const
+	{
+		return m_isModEnabled;
+	}
+
+private:
+	bool m_isModEnabled = true;
+};
+
+} // tlp
