@@ -1,8 +1,6 @@
 #pragma once
 
 #include <Geode/modify/CCParticleSystem.hpp>
-#include <Geode/loader/Mod.hpp>
-#include <string>
 
 struct TLPCCParticleSystem : geode::Modify<TLPCCParticleSystem, cocos2d::CCParticleSystem>
 {
