@@ -1,9 +1,7 @@
 #pragma once
-
 #include <Geode/modify/CCParticleSystem.hpp>
 
-struct TLPCCParticleSystem : geode::Modify<TLPCCParticleSystem, cocos2d::CCParticleSystem>
-{
+struct TLPCCParticleSystem : geode::Modify<TLPCCParticleSystem, cocos2d::CCParticleSystem> {
 	void loadScaledDefaults(float);
 	void resetSystem();
 	void setAngle(float var) override;

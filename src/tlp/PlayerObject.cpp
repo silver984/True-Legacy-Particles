@@ -4,10 +4,8 @@
 #include <Geode/loader/Log.hpp>
 #include <string>
 
-bool TLPPlayerObject::init(int player, int ship, GJBaseGameLayer* gameLayer, cocos2d::CCLayer* layer, bool playLayer)
-{
-	if (!PlayerObject::init(player, ship, gameLayer, layer, playLayer))
-	{
+bool TLPPlayerObject::init(int player, int ship, GJBaseGameLayer* gameLayer, cocos2d::CCLayer* layer, bool playLayer) {
+	if (!PlayerObject::init(player, ship, gameLayer, layer, playLayer)) {
 		return false;
 	}
 
@@ -41,10 +39,8 @@ bool TLPPlayerObject::init(int player, int ship, GJBaseGameLayer* gameLayer, coc
 	return true;
 }
 
-void TLPPlayerObject::onGround()
-{
-	if (!isVisible())
-	{
+void TLPPlayerObject::onGround() {
+	if (!isVisible()) {
 		return;
 	}
 
@@ -61,60 +57,48 @@ void TLPPlayerObject::onGround()
 	current->setID(lastID);
 }
 
-void TLPPlayerObject::toggleRobotMode(bool enable, bool noEffects)
-{
+void TLPPlayerObject::toggleRobotMode(bool enable, bool noEffects) {
 	PlayerObject::toggleRobotMode(enable, noEffects);
 
-	if (enable)
-	{
+	if (enable) {
 		updateGroundParticlesPosVar(cocos2d::CCPoint(15.f, 0.f));
 	}
 }
 
-void TLPPlayerObject::toggleSpiderMode(bool enable, bool noEffects)
-{
+void TLPPlayerObject::toggleSpiderMode(bool enable, bool noEffects) {
 	PlayerObject::toggleSpiderMode(enable, noEffects);
-	
-	if (enable)
-	{
+
+	if (enable) {
 		updateGroundParticlesPosVar(cocos2d::CCPoint(15.f, 0.f));
 	}
 }
 
-void TLPPlayerObject::update(float dt)
-{
+void TLPPlayerObject::update(float dt) {
 	cocos2d::CCPoint posFactor = cocos2d::CCPoint(10.f, m_isUpsideDown ? -13.f : 13.f) * m_vehicleSize;
 	posFactor.y = !m_isOnGround3 ? -posFactor.y : posFactor.y;
 	m_playerGroundParticles->setPosition(getPosition() - posFactor);
 
-	if (m_fields->lastVehicleScale != m_vehicleSize)
-	{
-		for (auto& particle : m_fields->allParticles)
-		{
+	if (m_fields->lastVehicleScale != m_vehicleSize) {
+		for (auto& particle : m_fields->allParticles) {
 			particle->setScale(m_vehicleSize);
 		}
 
 		m_fields->lastVehicleScale = m_vehicleSize;
 	}
 
-	if (m_isOnGround)
-	{
-		if (m_fields->lastIsOnGround != m_isOnGround)
-		{
+	if (m_isOnGround) {
+		if (m_fields->lastIsOnGround != m_isOnGround) {
 			onGround();
 			m_fields->lastIsOnGround = m_isOnGround;
 		}
-	}
-	else
-	{
+	} else {
 		m_fields->lastIsOnGround = false;
 	}
 
 	PlayerObject::update(dt);
 }
 
-void TLPPlayerObject::updateGroundParticlesPosVar(const cocos2d::CCPoint& ccp)
-{
+void TLPPlayerObject::updateGroundParticlesPosVar(const cocos2d::CCPoint& ccp) {
 	std::string lastID = m_playerGroundParticles->getID();
 	m_playerGroundParticles->setID("");
 	m_playerGroundParticles->setPosVar(ccp);

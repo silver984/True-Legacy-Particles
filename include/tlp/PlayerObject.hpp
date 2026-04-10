@@ -1,10 +1,8 @@
 #pragma once
-
 #include <Geode/modify/PlayerObject.hpp>
 #include <vector>
 
-struct TLPPlayerObject : geode::Modify<TLPPlayerObject, PlayerObject>
-{
+struct TLPPlayerObject : geode::Modify<TLPPlayerObject, PlayerObject> {
 	bool init(int player, int ship, GJBaseGameLayer* gameLayer, cocos2d::CCLayer* layer, bool playLayer);
 	// tlp addition
 	void onGround();
@@ -14,8 +12,7 @@ struct TLPPlayerObject : geode::Modify<TLPPlayerObject, PlayerObject>
 	// tlp addition
 	void updateGroundParticlesPosVar(const cocos2d::CCPoint& ccp);
 
-	struct Fields
-	{
+	struct Fields {
 		float lastVehicleScale = 0.f;
 		std::vector<cocos2d::CCParticleSystemQuad*> allParticles;
 		std::vector<cocos2d::CCParticleSystemQuad*> landParticles;
