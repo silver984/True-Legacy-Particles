@@ -48,9 +48,10 @@ void TLPPlayerObject::onGround() {
 
 	auto& current = m_fields->landParticles[m_fields->currentLandParticle];
 	std::string lastID = current->getID();
-	current->setID("");
 	cocos2d::CCPoint posFactor = cocos2d::CCPoint(0.f, (m_height / 2.f) * m_vehicleSize);
 	posFactor.y = m_isUpsideDown ? -posFactor.y : posFactor.y;
+	
+	current->setID("");
 	current->setPosition(getPosition() - posFactor);
 	current->setRotation(m_isUpsideDown ? 180.f : 0.f);
 	current->resetSystem();
@@ -74,7 +75,11 @@ void TLPPlayerObject::toggleSpiderMode(bool enable, bool noEffects) {
 }
 
 void TLPPlayerObject::update(float dt) {
-	cocos2d::CCPoint posFactor = cocos2d::CCPoint(10.f, m_isUpsideDown ? -13.f : 13.f) * m_vehicleSize;
+	cocos2d::CCPoint posFactor = cocos2d::CCPoint(
+		10.f,
+		m_isUpsideDown ? -13.f : 13.f
+	) * m_vehicleSize;
+	
 	posFactor.y = !m_isOnGround3 ? -posFactor.y : posFactor.y;
 	m_playerGroundParticles->setPosition(getPosition() - posFactor);
 
