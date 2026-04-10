@@ -44,25 +44,33 @@ void TLPPlayerObject::onGround() {
 		return;
 	}
 
-	m_fields->currentLandParticle = (m_fields->currentLandParticle + 1) % 2;
+	auto& currentIndex = m_fields->currentLandParticle;
+	currentIndex = (currentIndex + 1) % 2;
+	auto& current = m_fields->landParticles[currentIndex];
 
-	auto& current = m_fields->landParticles[m_fields->currentLandParticle];
-	std::string lastID = current->getID();
 	cocos2d::CCPoint posFactor = cocos2d::CCPoint(0.f, (m_height / 2.f) * m_vehicleSize);
 	posFactor.y = m_isUpsideDown ? -posFactor.y : posFactor.y;
 
-	current->setID("");
-	current->setPosition(getPosition() - posFactor);
-	current->setRotation(m_isUpsideDown ? 180.f : 0.f);
-	current->resetSystem();
-	current->setID(lastID);
+	modifyParticle(
+		current,
+		[&]() {
+			current->setPosition(getPosition() - posFactor);
+			current->setRotation(m_isUpsideDown ? 180.f : 0.f);
+			current->resetSystem();
+		}
+	);
 }
 
 void TLPPlayerObject::toggleRobotMode(bool enable, bool noEffects) {
 	PlayerObject::toggleRobotMode(enable, noEffects);
 
 	if (enable) {
-		updateGroundParticlesPosVar(cocos2d::CCPoint(15.f, 0.f));
+		modifyParticle(
+			m_playerGroundParticles,
+			[this]() {
+				m_playerGroundParticles->setPosVar(cocos2d::CCPoint(15.f, 0.f));
+			}
+		);
 	}
 }
 
@@ -70,7 +78,12 @@ void TLPPlayerObject::toggleSpiderMode(bool enable, bool noEffects) {
 	PlayerObject::toggleSpiderMode(enable, noEffects);
 
 	if (enable) {
-		updateGroundParticlesPosVar(cocos2d::CCPoint(15.f, 0.f));
+		modifyParticle(
+			m_playerGroundParticles,
+			[this]() {
+				m_playerGroundParticles->setPosVar(cocos2d::CCPoint(15.f, 0.f));
+			}
+		);
 	}
 }
 
@@ -83,6 +96,7 @@ void TLPPlayerObject::update(float dt) {
 	posFactor.y = !m_isOnGround3 ? -posFactor.y : posFactor.y;
 	m_playerGroundParticles->setPosition(getPosition() - posFactor);
 
+	// on player resize
 	if (m_fields->lastVehicleScale != m_vehicleSize) {
 		for (auto& particle : m_fields->allParticles) {
 			particle->setScale(m_vehicleSize);
@@ -91,6 +105,7 @@ void TLPPlayerObject::update(float dt) {
 		m_fields->lastVehicleScale = m_vehicleSize;
 	}
 
+	// on player hit ground
 	if (m_isOnGround) {
 		if (m_fields->hasTouchedGround != m_isOnGround) {
 			onGround();
@@ -103,9 +118,9 @@ void TLPPlayerObject::update(float dt) {
 	PlayerObject::update(dt);
 }
 
-void TLPPlayerObject::updateGroundParticlesPosVar(const cocos2d::CCPoint& ccp) {
-	std::string lastID = m_playerGroundParticles->getID();
-	m_playerGroundParticles->setID("");
-	m_playerGroundParticles->setPosVar(ccp);
-	m_playerGroundParticles->setID(lastID);
+void TLPPlayerObject::modifyParticle(cocos2d::CCParticleSystemQuad* particle, std::function<void()> callback) {
+	std::string lastID = particle->getID();
+	particle->setID("");
+	callback();
+	particle->setID(lastID);
 }

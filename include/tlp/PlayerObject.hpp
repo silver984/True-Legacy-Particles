@@ -1,6 +1,7 @@
 #pragma once
 #include <Geode/modify/PlayerObject.hpp>
 #include <vector>
+#include <functional>
 
 struct TLPPlayerObject : geode::Modify<TLPPlayerObject, PlayerObject> {
 	bool init(int player, int ship, GJBaseGameLayer* gameLayer, cocos2d::CCLayer* layer, bool playLayer);
@@ -10,7 +11,7 @@ struct TLPPlayerObject : geode::Modify<TLPPlayerObject, PlayerObject> {
 	void toggleSpiderMode(bool enable, bool noEffects);
 	void update(float dt) override;
 	// tlp addition
-	void updateGroundParticlesPosVar(const cocos2d::CCPoint& ccp);
+	void modifyParticle(cocos2d::CCParticleSystemQuad* particle, std::function<void()> callback);
 
 	struct Fields {
 		float lastVehicleScale = 0.f;
