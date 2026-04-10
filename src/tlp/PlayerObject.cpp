@@ -21,18 +21,18 @@ bool TLPPlayerObject::init(int player, int ship, GJBaseGameLayer* gameLayer, coc
 	m_landParticles0->setID("land-particles-0"_spr);
 	m_landParticles1->setID("land-particles-1"_spr);
 
-	m_fields->allParticles.push_back(m_playerGroundParticles);
-	m_fields->allParticles.push_back(m_trailingParticles);
-	m_fields->allParticles.push_back(m_shipClickParticles);
-	m_fields->allParticles.push_back(m_vehicleGroundParticles);
-	m_fields->allParticles.push_back(m_ufoClickParticles);
-	m_fields->allParticles.push_back(m_robotBurstParticles);
-	m_fields->allParticles.push_back(m_dashParticles);
-	m_fields->allParticles.push_back(m_swingBurstParticles1);
-	m_fields->allParticles.push_back(m_swingBurstParticles2);
-	m_fields->allParticles.push_back(m_landParticles0);
-	m_fields->allParticles.push_back(m_landParticles1);
-
+	auto& allParticles = m_fields->allParticles;
+	allParticles.push_back(m_playerGroundParticles);
+	allParticles.push_back(m_trailingParticles);
+	allParticles.push_back(m_shipClickParticles);
+	allParticles.push_back(m_vehicleGroundParticles);
+	allParticles.push_back(m_ufoClickParticles);
+	allParticles.push_back(m_robotBurstParticles);
+	allParticles.push_back(m_dashParticles);
+	allParticles.push_back(m_swingBurstParticles1);
+	allParticles.push_back(m_swingBurstParticles2);
+	allParticles.push_back(m_landParticles0);
+	allParticles.push_back(m_landParticles1);
 	m_fields->landParticles.push_back(m_landParticles0);
 	m_fields->landParticles.push_back(m_landParticles1);
 
@@ -50,7 +50,7 @@ void TLPPlayerObject::onGround() {
 	std::string lastID = current->getID();
 	cocos2d::CCPoint posFactor = cocos2d::CCPoint(0.f, (m_height / 2.f) * m_vehicleSize);
 	posFactor.y = m_isUpsideDown ? -posFactor.y : posFactor.y;
-	
+
 	current->setID("");
 	current->setPosition(getPosition() - posFactor);
 	current->setRotation(m_isUpsideDown ? 180.f : 0.f);
@@ -92,12 +92,12 @@ void TLPPlayerObject::update(float dt) {
 	}
 
 	if (m_isOnGround) {
-		if (m_fields->lastIsOnGround != m_isOnGround) {
+		if (m_fields->hasTouchedGround != m_isOnGround) {
 			onGround();
-			m_fields->lastIsOnGround = m_isOnGround;
+			m_fields->hasTouchedGround = m_isOnGround;
 		}
 	} else {
-		m_fields->lastIsOnGround = false;
+		m_fields->hasTouchedGround = false;
 	}
 
 	PlayerObject::update(dt);

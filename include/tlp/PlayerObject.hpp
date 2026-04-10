@@ -16,7 +16,7 @@ struct TLPPlayerObject : geode::Modify<TLPPlayerObject, PlayerObject> {
 		float lastVehicleScale = 0.f;
 		std::vector<cocos2d::CCParticleSystemQuad*> allParticles;
 		std::vector<cocos2d::CCParticleSystemQuad*> landParticles;
-		bool lastIsOnGround = false;
+		bool hasTouchedGround = false;
 		int currentLandParticle = -1;
 	};
 };
