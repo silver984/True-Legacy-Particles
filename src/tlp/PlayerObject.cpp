@@ -1,8 +1,23 @@
 #include <tlp/PlayerObject.hpp>
-#include <tlp/CCParticleSystem.hpp>
 #include <Geode/loader/Mod.hpp>
-#include <Geode/loader/Log.hpp>
+#include <Geode/loader/ModEvent.hpp>
 #include <string>
+
+namespace {
+
+bool is2p1Scaling = false;
+
+}
+
+$on_mod(Loaded) {
+	is2p1Scaling = geode::Mod::get()->getSettingValue<bool>("2.1-scaling");
+	(void)geode::listenForSettingChanges<bool>(
+		"2.1-scaling",
+		[](bool val) {
+			is2p1Scaling = val;
+		}
+	);
+}
 
 bool TLPPlayerObject::init(int player, int ship, GJBaseGameLayer* gameLayer, cocos2d::CCLayer* layer, bool playLayer) {
 	if (!PlayerObject::init(player, ship, gameLayer, layer, playLayer)) {
@@ -94,12 +109,26 @@ void TLPPlayerObject::update(float dt) {
 	) * m_vehicleSize;
 	
 	posFactor.y = !m_isOnGround3 ? -posFactor.y : posFactor.y;
-	m_playerGroundParticles->setPosition(getPosition() - posFactor);
+	modifyParticle(
+		m_playerGroundParticles,
+		[this, &posFactor]() {
+			m_playerGroundParticles->setPosition(getPosition() - posFactor);
+		}
+	);
 
 	// on player resize
 	if (m_fields->lastVehicleScale != m_vehicleSize) {
 		for (auto& particle : m_fields->allParticles) {
-			particle->setScale(m_vehicleSize);
+			if (is2p1Scaling) {
+				modifyParticle(
+					particle,
+					[&]() {
+						particle->loadScaledDefaults(m_vehicleSize);
+					}
+				);
+			} else {
+				particle->setScale(m_vehicleSize);
+			}
 		}
 
 		m_fields->lastVehicleScale = m_vehicleSize;

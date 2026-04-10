@@ -3,7 +3,8 @@
 void TLPCCNode::setPosition(const cocos2d::CCPoint& position) {
 	if (
 		getID() == "land-particles-0"_spr ||
-		getID() == "land-particles-1"_spr
+		getID() == "land-particles-1"_spr ||
+		getID() == "player-ground-particles"_spr
 	) {
 		return;
 	}

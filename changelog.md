@@ -1,8 +1,8 @@
 # True Legacy Particles
 
 ## 3.0.0
-- Update to Geode 5.3.0
-- Removed settings
+- Update to Geode 5.5.3
+- Stripped down settings
 - Reworked code
 
 ## 2.0.2
