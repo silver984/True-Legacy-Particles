@@ -1,5 +1,5 @@
 {
-	"geode": "5.5.3",
+	"geode": "5.8.2",
 	"gd": {
 		"win": "2.2081",
 		"android": "2.2081",
@@ -10,9 +10,9 @@
 	"name": "True Legacy Particles",
 	"version": "v3.0.0",
 	"developer": "silver984",
-	"description": "Brings back old particle behavior for the player vehicle.",
+	"description": "Old particle behavior for the player vehicle.",
 	"links": {
-		"source": "https://github.com/silver984/True-Legacy-Particles"
+		"source": "https://github.com/silver984/TrueLegacyParticles"
 	},
 	"tags": [
 		"offline",
@@ -24,11 +24,6 @@
 			"name": "Enabled",
 			"type": "bool",
 			"default": true
-		},
-		"2.1-scaling": {
-			"name": "2.1 Scaling",
-			"type": "bool",
-			"default": false
 		}
 	}
 }

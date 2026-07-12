@@ -1,0 +1,32 @@
+BasedOnStyle: LLVM
+ColumnLimit: 80
+ReflowComments: false
+SpacesBeforeTrailingComments: 1
+PointerAlignment: Left
+QualifierAlignment: Right
+BreakBeforeBraces: Attach
+IndentCaseLabels: false
+AllowShortFunctionsOnASingleLine: All
+SpaceBeforeParens: ControlStatements
+AccessModifierOffset: -4
+UseTab: Never
+IndentWidth: 4
+TabWidth: 4
+BreakBeforeTernaryOperators: false
+AlignConsecutiveAssignments: Consecutive
+AlignAfterOpenBracket: Align
+AlignConsecutiveMacros: true
+AlignTrailingComments:
+  Kind: Always
+  OverEmptyLines: 1
+SpaceAfterCStyleCast: true
+SpaceAfterLogicalNot: false
+SpaceBeforeAssignmentOperators: true
+SpaceInEmptyParentheses: false
+SpacesInAngles: false
+SpacesInContainerLiterals: false
+SpacesInCStyleCastParentheses: false
+SpacesInParentheses: false
+SpacesInSquareBrackets: false
+Cpp11BracedListStyle: true
+Standard: c++17

@@ -1,3 +1,3 @@
 # True Legacy Particles
 
-Brings back old particle behavior for the player vehicle.
+Old particle behavior for the player vehicle.
