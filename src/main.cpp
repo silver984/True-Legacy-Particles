@@ -3,14 +3,25 @@
 #include <Geode/loader/SettingV3.hpp>
 #include <Geode/modify/PlayerObject.hpp>
 
+namespace settings {
+bool is2p1ScalingEnabled = false;
+template <typename Callback>
+void addListener(std::string_view key, Callback&& cb) {
+    // add the listener using geode's api but also call the callback before
+    // doing so. i just think its much more intuitive
+    cb(geode::Mod::get()->getSettingValue<bool>(key));
+    geode::listenForSettingChanges<bool>(std::string(key), std::move(cb));
+};
+} // namespace settings
+
 $on_mod(Loaded) {
-    auto toggleHooks = [](bool val) -> void {
+    settings::addListener("toggle", [](bool val) -> void {
         for (auto& hook : geode::Mod::get()->getHooks())
             (void) hook->toggle(val);
-    };
-    constexpr char const* settingName = "switch";
-    toggleHooks(geode::Mod::get()->getSettingValue<bool>(settingName));
-    geode::listenForSettingChanges<bool>(std::string(settingName), toggleHooks);
+    });
+    settings::addListener("2.1-scaling", [](bool val) -> void {
+        settings::is2p1ScalingEnabled = val;
+    });
 }
 
 struct TLPPlayerObject : geode::Modify<TLPPlayerObject, PlayerObject> {
@@ -46,7 +57,7 @@ struct TLPPlayerObject : geode::Modify<TLPPlayerObject, PlayerObject> {
         PlayerObject::addAllParticles();
         m_parentLayer->addChild(m_fields->m_groundParticles);
         // remove the original ground particles from its parent, assuming that
-        // it has already been added by PlayerObject::addAllParticles
+        // it has already been added by `PlayerObject::addAllParticles`
         m_playerGroundParticles->removeFromParent();
     }
 
@@ -61,6 +72,10 @@ struct TLPPlayerObject : geode::Modify<TLPPlayerObject, PlayerObject> {
         updateGroundParticlesEmission();
     }
 
+    // `PlayerObject::togglePlayerScale` and `PlayerObject::flipGravity` are
+    // called numerous times during initialization for some reason. because of
+    // this, i decided to just add state guards and new fixed functions for them
+
     void togglePlayerScale(bool enable, bool noEffects) {
         PlayerObject::togglePlayerScale(enable, noEffects);
         if (m_fields->m_lastVehicleSize != m_vehicleSize) {
@@ -72,7 +87,7 @@ struct TLPPlayerObject : geode::Modify<TLPPlayerObject, PlayerObject> {
     void flipGravity(bool flip, bool noEffects) {
         PlayerObject::flipGravity(flip, noEffects);
         if (m_fields->m_wasUpsideDown != m_isUpsideDown) {
-            onGravityChange();
+            onGravityFlip();
             m_fields->m_wasUpsideDown = m_isUpsideDown;
         }
     }
@@ -92,11 +107,15 @@ struct TLPPlayerObject : geode::Modify<TLPPlayerObject, PlayerObject> {
 
     // tlp addition
     void onSizeChange(float size) {
-        m_fields->m_groundParticles->loadScaledDefaults(size);
+        if (settings::is2p1ScalingEnabled) {
+            m_fields->m_groundParticles->loadScaledDefaults(size);
+            return;
+        }
+        m_fields->m_groundParticles->setScale(size);
     }
 
     // tlp addition
-    void onGravityChange() {
+    void onGravityFlip() {
         auto& groundParticles                = m_fields->m_groundParticles;
         cocos2d::CCPoint groundParticlesGrav = groundParticles->getGravity();
         groundParticlesGrav.y                = -groundParticlesGrav.y;

@@ -20,10 +20,16 @@
 		"gameplay"
 	],
 	"settings": {
-		"switch": {
+		"toggle": {
 			"name": "Enabled",
 			"type": "bool",
 			"default": true
+		},
+		"2.1-scaling": {
+			"name": "2.1 Scaling",
+			"type": "bool",
+			"enable-if": "toggle",
+			"default": false
 		}
 	}
 }
