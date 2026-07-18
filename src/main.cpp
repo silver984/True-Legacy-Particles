@@ -24,7 +24,7 @@ $on_mod(Loaded) {
     });
 }
 
-struct TLPPlayerObject : geode::Modify<TLPPlayerObject, PlayerObject> {
+struct TLPPlayerObject final : geode::Modify<TLPPlayerObject, PlayerObject> {
     struct Fields {
         Fields()
             : m_groundParticles(nullptr), m_lastVehicleSize(1.f),
@@ -39,10 +39,10 @@ struct TLPPlayerObject : geode::Modify<TLPPlayerObject, PlayerObject> {
         if (!PlayerObject::init(player, ship, gameLayer, layer, playLayer))
             return false;
 
+        using enum cocos2d::tCCPositionType;
         auto& groundParticles = m_fields->m_groundParticles;
         groundParticles =
             cocos2d::CCParticleSystemQuad::create("dragEffect.plist", false);
-        using enum cocos2d::tCCPositionType;
         groundParticles->setPositionType(kCCPositionTypeRelative);
         groundParticles->setID("ground-particles"_spr);
         // remove `m_playerGroundParticles` from `m_particleSystems` and replace
@@ -53,9 +53,17 @@ struct TLPPlayerObject : geode::Modify<TLPPlayerObject, PlayerObject> {
         return true;
     }
 
+    void setColor(cocos2d::ccColor3B const& color) {
+        PlayerObject::setColor(color);
+        auto btof = [](GLubyte val) -> float { return (float) val / 255.f; };
+        m_fields->m_groundParticles->setStartColor(cocos2d::ccColor4F{
+            btof(color.r), btof(color.g), btof(color.b), 1.f});
+    }
+
     void addAllParticles() {
         PlayerObject::addAllParticles();
-        m_parentLayer->addChild(m_fields->m_groundParticles);
+        auto& groundParticles = m_fields->m_groundParticles;
+        m_parentLayer->addChild(groundParticles);
         // remove the original ground particles from its parent, assuming that
         // it has already been added by `PlayerObject::addAllParticles`
         m_playerGroundParticles->removeFromParent();
@@ -92,9 +100,9 @@ struct TLPPlayerObject : geode::Modify<TLPPlayerObject, PlayerObject> {
         }
     }
 
-    // both the robot and spider gamemodes change the position variance of the
-    // ground particles to this value: (x: 15, y: 0). both of these hooks are
-    // similar enough so i just made a macro to reduce repitition
+// both the robot and spider gamemodes change the position variance of the
+// ground particles to this value: (x: 15, y: 0). both of these hooks are
+// similar enough so i just made a macro to reduce repitition
 #define GEODE_TOGGLE_SURFACE_GAMEMODE(name)                                    \
     void toggle##name##Mode(bool enable, bool noEffects) {                     \
         PlayerObject::toggle##name##Mode(enable, noEffects);                   \
@@ -107,11 +115,12 @@ struct TLPPlayerObject : geode::Modify<TLPPlayerObject, PlayerObject> {
 
     // tlp addition
     void onSizeChange(float size) {
+        auto& groundParticles = m_fields->m_groundParticles;
         if (settings::is2p1ScalingEnabled) {
-            m_fields->m_groundParticles->loadScaledDefaults(size);
+            groundParticles->loadScaledDefaults(size);
             return;
         }
-        m_fields->m_groundParticles->setScale(size);
+        groundParticles->setScale(size);
     }
 
     // tlp addition
@@ -135,7 +144,7 @@ struct TLPPlayerObject : geode::Modify<TLPPlayerObject, PlayerObject> {
     // tlp addition
     void updateGroundParticlesEmission() {
         auto& obj = m_fields->m_groundParticles;
-        if (m_hasGroundParticles && this->isVisible()) {
+        if (m_hasGroundParticles && !m_isHidden) {
             if (!obj->isActive())
                 obj->resumeSystem();
             return;
