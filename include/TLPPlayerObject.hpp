@@ -4,6 +4,7 @@ struct TLPPlayerObject final : geode::Modify<TLPPlayerObject, PlayerObject> {
     struct Fields {
         Fields();
         cocos2d::CCParticleSystemQuad* m_groundParticles;
+        cocos2d::CCParticleSystemQuad* m_trailParticles;
         float m_lastVehicleSize;
         bool m_wasUpsideDown;
     };
@@ -14,6 +15,12 @@ struct TLPPlayerObject final : geode::Modify<TLPPlayerObject, PlayerObject> {
 
     bool init(int player, int ship, GJBaseGameLayer* gameLayer,
               cocos2d::CCLayer* layer, bool playLayer);
+
+    // tlp addition
+    void initGroundParticles();
+
+    // tlp addition
+    void initTrailParticles();
 
     void addAllParticles();
     void stopParticles();
