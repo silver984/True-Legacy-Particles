@@ -1,6 +1,5 @@
 #pragma once
 #include <Geode/modify/PlayerObject.hpp>
-
 struct TLPPlayerObject final : geode::Modify<TLPPlayerObject, PlayerObject> {
     struct Fields {
         Fields();
@@ -17,28 +16,25 @@ struct TLPPlayerObject final : geode::Modify<TLPPlayerObject, PlayerObject> {
               cocos2d::CCLayer* layer, bool playLayer);
 
     void addAllParticles();
-
     void stopParticles();
-
-    void togglePlayerScale(bool enable, bool noEffects);
 
     void flipGravity(bool flip, bool noEffects);
 
+    void togglePlayerScale(bool enable, bool noEffects);
     void toggleRobotMode(bool enable, bool noEffects);
-
     void toggleSpiderMode(bool enable, bool noEffects);
-
-    // tlp addition
-    void updateParticles();
-
-    // tlp addition
-    void updateParticleColors();
 
     // tlp addition
     void onSizeChange(float size);
 
     // tlp addition
     void onGravityFlip();
+
+    // tlp addition
+    void updateParticles();
+
+    // tlp addition
+    void updateParticleColors();
 
     // tlp addition
     void updateGroundParticlesPos();
