@@ -11,15 +11,11 @@ struct TLPPlayerObject final : geode::Modify<TLPPlayerObject, PlayerObject> {
         geode::modifier::ModifyDerive<TLPPlayerObject, PlayerObject>>;
     static void onModify(Self&);
 
-    void updatePlayerArt();
-    void togglePlayerScale(bool, bool);
-    void flipGravity(bool, bool);
+    $override void updatePlayerArt();
+    $override void togglePlayerScale(bool, bool);
 
     // @note True Legacy Particles Addition
     void onSizeChange();
-
-    // @note True Legacy Particles Addition
-    void onGravityFlip();
 
     // @note True Legacy Particles Addition
     void updateGroundParticles();

@@ -3,17 +3,29 @@
 #include <Settings.hpp>
 #include <TLPPlayerObject.hpp>
 
+using namespace geode::cast;
+
 struct TLPCCParticleSystem final
     : geode::Modify<TLPCCParticleSystem, cocos2d::CCParticleSystem> {
     using Self = geode::modifier::ModifyBase<geode::modifier::ModifyDerive<
         TLPCCParticleSystem, cocos2d::CCParticleSystem>>;
+    struct Fields {
+        cocos2d::CCPoint m_fDefaultModeAGravity;
+    };
+
     static void onModify(Self& self) {
         (void) self.setHookPriority(
             "cocos2d::CCParticleSystem::loadScaledDefaults",
             geode::Priority::Last);
     }
 
-    void loadScaledDefaults(float) {
+    $override bool initWithFile(char const* plistFile, bool unk) {
+        if (!CCParticleSystem::initWithFile(plistFile, unk)) return false;
+        m_fields->m_fDefaultModeAGravity = getGravity();
+        return true;
+    }
+
+    $override void loadScaledDefaults(float) {
         // intentionally do nothing
     }
 
@@ -27,6 +39,14 @@ struct TLPCCParticleSystem final
         setSpeedVar(m_fDefaultModeASpeedVar * scale);
         setPosVar(m_tDefaultPosVar * scale);
     }
+
+    // @note True Legacy Particles Addition
+    void toggleFlipGravityAndAngle(bool val) {
+        auto& f = m_fields;
+        setGravity(val ? -f->m_fDefaultModeAGravity :
+                         f->m_fDefaultModeAGravity);
+        setAngle(val ? -m_fDefaultAngle : m_fDefaultAngle);
+    }
 };
 
 TLPPlayerObject::Fields::Fields()
@@ -38,10 +58,13 @@ void TLPPlayerObject::onModify(Self& self) {
 }
 
 void TLPPlayerObject::updatePlayerArt() {
-    // todo: walking on walls (this implementation is not faithful enough)
     if (m_isShip || m_isBird || m_isDart || m_isRobot || m_isSpider)
         m_mainLayer->setScaleY(m_isUpsideDown ? -1.f : 1.f);
     else m_mainLayer->setScaleY(1.f);
+    m_mainLayer->setScaleX(m_isGoingLeft ? -1.f : 1.f);
+    if (m_isRobot || m_isSpider) m_playerGroundParticles->setPosVar(ccp(15, 0));
+    modify_cast<TLPCCParticleSystem*>(m_playerGroundParticles)
+        ->toggleFlipGravityAndAngle(m_isUpsideDown);
 }
 
 void TLPPlayerObject::togglePlayerScale(bool enable, bool noEffects) {
@@ -52,36 +75,22 @@ void TLPPlayerObject::togglePlayerScale(bool enable, bool noEffects) {
     }
 }
 
-void TLPPlayerObject::flipGravity(bool flip, bool noEffects) {
-    PlayerObject::flipGravity(flip, noEffects);
-    if (m_fields->m_wasUpsideDown != m_isUpsideDown) {
-        onGravityFlip();
-        m_fields->m_wasUpsideDown = m_isUpsideDown;
-    }
-}
-
 void TLPPlayerObject::onSizeChange() {
-    if (settings::is2p1ScalingEnabled()) {
-        for (cocos2d::CCObject* obj :
-             geode::cocos::CCArrayExt(m_particleSystems))
-            static_cast<TLPCCParticleSystem*>(obj)->loadScaledDefaults2(
-                m_vehicleSize);
-        return;
+    for (cocos2d::CCObject* obj : geode::cocos::CCArrayExt(m_particleSystems)) {
+        TLPCCParticleSystem* particle = modify_cast<TLPCCParticleSystem*>(
+            typeinfo_cast<cocos2d::CCParticleSystemQuad*>(obj));
+        if (settings::is2p1ScalingEnabled())
+            particle->loadScaledDefaults2(m_vehicleSize);
+        else particle->setScale(m_vehicleSize);
     }
-    for (cocos2d::CCObject* obj : geode::cocos::CCArrayExt(m_particleSystems))
-        static_cast<cocos2d::CCParticleSystemQuad*>(obj)->setScale(
-            m_vehicleSize);
-}
-
-void TLPPlayerObject::onGravityFlip() {
-    cocos2d::CCPoint grav = m_playerGroundParticles->getGravity();
-    grav.y                = -grav.y;
-    m_playerGroundParticles->setGravity(grav);
-    m_playerGroundParticles->setAngle(-m_playerGroundParticles->getAngle());
 }
 
 void TLPPlayerObject::updateGroundParticles() {
-    cocos2d::CCPoint factor(10.f, m_isUpsideDown ? -13.f : 13.f);
+    constexpr float xOffset = 10.f;
+    constexpr float yOffset = 13.f;
+    cocos2d::CCPoint factor(m_isGoingLeft ? -xOffset : xOffset,
+                            m_isUpsideDown ? -yOffset : yOffset);
+    if (m_isRobot || m_isSpider) factor.y += 2.f;
     if (m_isBall && !m_isOnGround3) factor.y = -factor.y;
     factor *= m_vehicleSize;
     m_playerGroundParticles->setPosition(this->getPosition() - factor);
