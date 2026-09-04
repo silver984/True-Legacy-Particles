@@ -1,0 +1,14 @@
+﻿{
+  "version": 9,
+  "configurePresets": [
+    {
+      "name": "base",
+      "generator": "Ninja",
+      "hidden": true,
+      "binaryDir": "${sourceDir}/build",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo"
+      }
+    }
+  ]
+}

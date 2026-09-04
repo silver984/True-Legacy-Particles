@@ -1,20 +1,7 @@
 ﻿{
-  "version": 2,
-  "configurePresets": [
-    {
-      "name": "config",
-      "generator": "Ninja",
-      "binaryDir": "${sourceDir}/build",
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "RelWithDebInfo"
-      }
-    }
-  ],
-
-  "buildPresets": [
-    {
-      "name": "build",
-      "configurePreset": "config"
-    }
+  "version": 9,
+  "include": [
+    "cmake/presets/clang.json",
+    "cmake/presets/msvc.json"
   ]
 }
