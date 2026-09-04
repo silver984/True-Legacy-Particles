@@ -10,7 +10,7 @@ using namespace geode::cast;
 
 struct TLPGJBaseGameLayer final
     : geode::Modify<TLPGJBaseGameLayer, GJBaseGameLayer> {
-    $override void update(float dt) {
+    void update(float dt) $override {
         GJBaseGameLayer::update(dt);
         if (m_isEditor) return;
         TLPPlayerObject* player1 = modify_cast<TLPPlayerObject*>(m_player1);
@@ -22,7 +22,7 @@ struct TLPGJBaseGameLayer final
 };
 
 struct TLPMenuGameLayer final : geode::Modify<TLPMenuGameLayer, MenuGameLayer> {
-    $override void update(float dt) {
+    void update(float dt) $override {
         MenuGameLayer::update(dt);
         TLPPlayerObject* playerObject =
             modify_cast<TLPPlayerObject*>(m_playerObject);

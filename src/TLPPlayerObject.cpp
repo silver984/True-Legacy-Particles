@@ -14,18 +14,18 @@ struct TLPCCParticleSystem final
     };
 
     static void onModify(Self& self) {
-        (void) self.setHookPriority(
+        (void)self.setHookPriority(
             "cocos2d::CCParticleSystem::loadScaledDefaults",
             geode::Priority::Last);
     }
 
-    $override bool initWithFile(char const* plistFile, bool unk) {
+    bool initWithFile(char const* plistFile, bool unk) $override {
         if (!CCParticleSystem::initWithFile(plistFile, unk)) return false;
         m_fields->m_fDefaultModeAGravity = getGravity();
         return true;
     }
 
-    $override void loadScaledDefaults(float) {
+    void loadScaledDefaults(float) $override {
         // intentionally do nothing
     }
 
@@ -49,18 +49,16 @@ struct TLPCCParticleSystem final
     }
 };
 
-TLPPlayerObject::Fields::Fields()
-    : m_lastVehicleSize(1.f), m_wasUpsideDown(false) {}
-
 void TLPPlayerObject::onModify(Self& self) {
-    (void) self.setHookPriority("PlayerObject::updatePlayerArt",
-                                geode::Priority::Last);
+    (void)self.setHookPriority("PlayerObject::updatePlayerArt",
+                               geode::Priority::Last);
 }
 
 void TLPPlayerObject::updatePlayerArt() {
     if (m_isShip || m_isBird || m_isDart || m_isRobot || m_isSpider)
         m_mainLayer->setScaleY(m_isUpsideDown ? -1.f : 1.f);
-    else m_mainLayer->setScaleY(1.f);
+    else
+        m_mainLayer->setScaleY(1.f);
     m_mainLayer->setScaleX(m_isGoingLeft ? -1.f : 1.f);
     if (m_isRobot || m_isSpider) m_playerGroundParticles->setPosVar(ccp(15, 0));
     modify_cast<TLPCCParticleSystem*>(m_playerGroundParticles)
@@ -81,15 +79,16 @@ void TLPPlayerObject::onSizeChange() {
             typeinfo_cast<cocos2d::CCParticleSystemQuad*>(obj));
         if (settings::is2p1ScalingEnabled())
             particle->loadScaledDefaults2(m_vehicleSize);
-        else particle->setScale(m_vehicleSize);
+        else
+            particle->setScale(m_vehicleSize);
     }
 }
 
 void TLPPlayerObject::updateGroundParticles() {
-    constexpr float xOffset = 10.f;
-    constexpr float yOffset = 13.f;
-    cocos2d::CCPoint factor(m_isGoingLeft ? -xOffset : xOffset,
-                            m_isUpsideDown ? -yOffset : yOffset);
+    constexpr float X_OFFSET = 10.f;
+    constexpr float Y_OFFSET = 13.f;
+    cocos2d::CCPoint factor(m_isGoingLeft ? -X_OFFSET : X_OFFSET,
+                            m_isUpsideDown ? -Y_OFFSET : Y_OFFSET);
     if (m_isRobot || m_isSpider) factor.y += 2.f;
     if (m_isBall && !m_isOnGround3) factor.y = -factor.y;
     factor *= m_vehicleSize;
