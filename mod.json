@@ -1,35 +1,41 @@
 {
-	"geode": "5.8.2",
-	"gd": {
-		"win": "2.2081",
-		"android": "2.2081",
-		"mac": "2.2081",
-		"ios": "2.2081"
-	},
-	"id": "silverstar.legacy-particles",
-	"name": "True Legacy Particles",
-	"version": "v3.0.0",
-	"developer": "silver984",
-	"description": "Old particle behavior for the player vehicle.",
-	"links": {
-		"source": "https://github.com/silver984/TrueLegacyParticles"
-	},
-	"tags": [
-		"offline",
-		"customization",
-		"gameplay"
-	],
-	"settings": {
-		"toggle": {
-			"name": "Enabled",
-			"type": "bool",
-			"default": true
-		},
-		"2.1-scaling": {
-			"name": "2.1 Scaling",
-			"type": "bool",
-			"enable-if": "toggle",
-			"default": false
-		}
-	}
+  "geode": "5.8.2",
+  "gd": {
+    "win": "2.2081",
+    "android": "2.2081",
+    "mac": "2.2081",
+    "ios": "2.2081"
+  },
+  "id": "silverstar.legacy-particles",
+  "name": "True Legacy Particles",
+  "version": "v3.0.0",
+  "developer": "silver984",
+  "description": "Old particle behavior for the player vehicle.",
+  "links": {
+    "source": "https://github.com/silver984/TrueLegacyParticles"
+  },
+  "tags": [
+    "offline",
+    "customization",
+    "gameplay"
+  ],
+  "settings": {
+    "toggle": {
+      "name": "Enabled",
+      "type": "bool",
+      "default": true
+    },
+    "2.1-scaling": {
+      "name": "2.1 Scaling",
+      "type": "bool",
+      "enable-if": "toggle",
+      "default": false
+    },
+    "fix-spider-orb": {
+      "name": "Fix Spider Orb",
+      "type": "bool",
+      "enable-if": "toggle",
+      "default": true
+    }
+  }
 }

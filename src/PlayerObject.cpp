@@ -120,11 +120,6 @@ void tlp::PlayerObject::updateParticles() {
     cocos2d::CCPoint factor(m_isGoingLeft ? -X_OFFSET : X_OFFSET,
                             m_isUpsideDown ? -Y_OFFSET : Y_OFFSET);
 
-    if (m_isRobot || m_isSpider) {
-        constexpr float Y_FACTOR = 2.f;
-        factor.y += m_isUpsideDown ? -Y_FACTOR : Y_FACTOR;
-    }
-
     if (m_isBall && !m_isOnGround3) {
         factor.y = -factor.y;
     }
