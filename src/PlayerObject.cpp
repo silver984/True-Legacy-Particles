@@ -4,9 +4,20 @@
 #include <tlp/PlayerObject.hpp>
 #include <tlp/Settings.hpp>
 
+using namespace geode::prelude;
+
+namespace {
+
+bool isLegacyScaling = false;
+
+}
+
+$on_mod(Loaded) {
+    tlp::settings::listener<bool>("2.1-scaling", [](bool val) -> void { isLegacyScaling = val; });
+}
+
 namespace tlp {
 
-using namespace prelude;
 struct CCParticleSystem;
 
 } // namespace tlp
@@ -94,7 +105,7 @@ void tlp::PlayerObject::onSizeChange() {
 
         auto* particle = modify_cast<tlp::CCParticleSystem*>(constituent);
 
-        if (settings::is2p1ScalingEnabled()) {
+        if (isLegacyScaling) {
             particle->loadScaledDefaults2(m_vehicleSize);
         } else {
             particle->setScale(m_vehicleSize);
