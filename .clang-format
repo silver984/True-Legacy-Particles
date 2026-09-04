@@ -6,8 +6,10 @@ PointerAlignment: Left
 QualifierAlignment: Right
 BreakBeforeBraces: Attach
 IndentCaseLabels: false
-AllowShortFunctionsOnASingleLine: All
-AllowShortIfStatementsOnASingleLine: AllIfsAndElse
+IndentPPDirectives: BeforeHash
+AllowShortFunctionsOnASingleLine: Empty
+AllowShortIfStatementsOnASingleLine: Always
+# InsertBraces: true
 SpaceBeforeParens: ControlStatements
 AccessModifierOffset: -4
 UseTab: Never
@@ -20,7 +22,7 @@ AlignConsecutiveMacros: true
 AlignTrailingComments:
   Kind: Always
   OverEmptyLines: 1
-SpaceAfterCStyleCast: true
+SpaceAfterCStyleCast: false
 SpaceAfterLogicalNot: false
 SpaceBeforeAssignmentOperators: true
 SpaceInEmptyParentheses: false
@@ -30,4 +32,5 @@ SpacesInCStyleCastParentheses: false
 SpacesInParentheses: false
 SpacesInSquareBrackets: false
 Cpp11BracedListStyle: true
+SortIncludes: true
 Standard: c++17

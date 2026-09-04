@@ -1,0 +1,5 @@
+InlayHints:
+  Enabled: No
+
+Completion:
+  HeaderInsertion: Never
