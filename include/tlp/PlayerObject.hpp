@@ -1,15 +1,26 @@
 #pragma once
 #include <Geode/modify/PlayerObject.hpp>
 
-struct TLPPlayerObject final : geode::Modify<TLPPlayerObject, PlayerObject> {
+namespace gd {
+
+using PlayerObject = ::PlayerObject;
+
+}
+
+namespace tlp {
+
+using namespace geode::prelude;
+struct PlayerObject;
+
+} // namespace tlp
+
+struct tlp::PlayerObject : Modify<tlp::PlayerObject, gd::PlayerObject> {
     struct Fields {
-        Fields();
         float m_lastVehicleSize = 1.f;
         bool m_wasUpsideDown    = false;
     };
 
-    using Self = geode::modifier::ModifyBase<
-        geode::modifier::ModifyDerive<TLPPlayerObject, PlayerObject>>;
+    using Self = ModifyBase<ModifyDerive<tlp::PlayerObject, gd::PlayerObject>>;
     static void onModify(Self&);
 
     void updatePlayerArt() $override;
@@ -19,5 +30,5 @@ struct TLPPlayerObject final : geode::Modify<TLPPlayerObject, PlayerObject> {
     void onSizeChange();
 
     // @note True Legacy Particles Addition
-    void updateGroundParticles();
+    void updateParticles();
 };

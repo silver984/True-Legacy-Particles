@@ -1,7 +1,7 @@
 #pragma once
 
-namespace settings {
+namespace tlp::settings {
 
 [[nodiscard]] bool is2p1ScalingEnabled();
 
-} // namespace settings
+} // namespace tlp::settings
